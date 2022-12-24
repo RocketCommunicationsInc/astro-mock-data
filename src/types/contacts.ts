@@ -11,12 +11,12 @@ export type Alert = {
 };
 
 export type ContactStatus =
-  | "caution"
-  | "critical"
-  | "normal"
-  | "off"
-  | "serious"
-  | "standby";
+  | 'caution'
+  | 'critical'
+  | 'normal'
+  | 'off'
+  | 'serious'
+  | 'standby';
 
 export type Contact = {
   _id: string;
