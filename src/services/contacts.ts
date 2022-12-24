@@ -6,10 +6,9 @@ const eventName = 'contacts';
 let count = 10;
 
 const publish = (data: Contact[]) => {
-  if (!Array.isArray(subscribers[eventName])) {
-    return;
-  }
-  subscribers[eventName].forEach((callback: Function) => {
+  if (!Array.isArray(subscribers[eventName])) return;
+
+  subscribers[eventName].forEach(callback => {
     callback(data);
   });
 };
@@ -22,6 +21,7 @@ export const onContactsChange = (
   if (!Array.isArray(subscribers[eventName])) {
     subscribers[eventName] = [];
   }
+
   subscribers[eventName].push(callback);
   const index = subscribers[eventName].length - 1;
 
