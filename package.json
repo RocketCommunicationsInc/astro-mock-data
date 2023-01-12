@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
-    "dev": "ts-node-dev --respawn src/index.ts"
+    "dev": "ts-node-dev --respawn dev/index.ts"
   },
   "keywords": [],
   "author": "",
