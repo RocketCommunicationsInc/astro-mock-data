@@ -1,7 +1,7 @@
 {
   "name": "@bkiern/data",
   "version": "0.0.1",
-  "description": "Moch data for use with Astro UXDS demo apps.",
+  "description": "Mock data for use with Astro UXDS demo apps.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
