@@ -1,4 +1,30 @@
-const options = {
+import { Status } from '../types';
+
+type DataOptions = {
+  categories: string[];
+  errorTypes: string[];
+  grounds: string[];
+  resolutions: string[];
+  resolutionStatuses: string[];
+  states: string[];
+  statuses: Status[];
+  steps: string[];
+};
+
+const options: DataOptions = {
+  categories: ['software', 'spacecraft', 'hardware'],
+  errorTypes: [
+    'Offline',
+    'Degraded',
+    'Solar panel misalignment',
+    'SARM failure',
+    'Power degradation',
+    'Weak signal',
+    'Memory limit reached',
+    'Out of disk space',
+    'Limited disk space',
+    'NOLOCK',
+  ],
   grounds: ['CTS', 'DGS', 'GTS', 'TCS', 'VTS', 'NHS', 'TTS', 'HTS'],
   resolutions: ['complete', 'failed', 'pass', 'prepass', 'scheduled'],
   resolutionStatuses: ['normal', 'critical', 'off', 'standby'],
