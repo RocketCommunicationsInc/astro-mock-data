@@ -1,72 +1,60 @@
 import { faker } from '@faker-js/faker';
-import options from '../src/data/options';
+import { generateContacts } from '../src/lib/contacts/generate-contacts';
+// import { generateContact } from '../src/lib/contacts/generate-contact';
+// import { generateAlerts } from '../src/lib/alerts/generate-alerts';
+// import { generateAlert } from '../src/lib/alerts/generate-alert';
 
-type RangeOptions = number | { start: number; stop: number; step?: number };
-const range = (options: RangeOptions): number[] => {
-  if (typeof options === 'number') {
-    return Array.from({ length: options }, (_, i) => 0 + i);
-  }
-  const { start, stop, step = 1 } = options;
-  const length = (stop - start) / step + 1;
-  return Array.from({ length }, (_, i) => start + i * step);
-};
+const index = faker.datatype.number(99);
 
-type MinMaxPrecision = { min?: number; max?: number; precision?: number };
-type BetweenOptions = number | MinMaxPrecision;
-const between = (options?: BetweenOptions) => faker.datatype.number(options);
+const contacts = generateContacts(100, {
+  // alertsPercentage: 5,
+  // secondAlertPercentage: 3,
+  // daysRange: 2,
+  // dateRef: '3/17/2008',
+});
+// console.log(contacts);
 
-const shuffle = <T>(arr: T[]) => {
-  const shuffled = faker.helpers.shuffle<T>(arr);
-  return shuffled[between(arr.length - 1)];
-};
+// const contact = generateContact(49);
+// console.log(contact);
 
-type ChuncksOptions = { count: number; length: MinMaxPrecision };
-const generateAlphaNumericChuncks = ({ count, length }: ChuncksOptions) => {
-  return range(count).map(() => faker.random.alphaNumeric(between(length)));
-};
+// const alerts = generateAlerts(3, { createdRef: '9/1/2001' });
+// console.log(alerts);
 
-const generateContact = (index: number) => {
-  const contactId = faker.datatype.uuid();
-  const alphaNumericChuncks = generateAlphaNumericChuncks({
-    count: between({ min: 5, max: 7 }),
-    length: { min: 5, max: 12 },
-  });
+// const alert = generateAlert({ refId: 'asdas' });
+// console.log(alert);
 
-  const is10Percent = index % 10 === 0;
-  const is2Percent = index > 0 && index % 50 === 0;
-  const alertsRange = is10Percent ? { start: 0, stop: is2Percent ? 1 : 0 } : 0;
+// contacts.flatMap(({ alerts }, i) => {
+//   if (alerts.length > 0) {
+//     console.log(i, alerts.length);
+//   }
+// });
 
-  return {
-    id: contactId,
-    status: shuffle(options.statuses),
-    name: faker.datatype.number(),
-    ground: shuffle(options.grounds),
-    satellite: 'USA-' + faker.random.alphaNumeric(5).toUpperCase(),
-    equipment: alphaNumericChuncks.join(' ').toUpperCase(),
-    state: shuffle(options.states),
-    step: shuffle(options.steps),
-    detail: faker.lorem.sentence(between({ min: 8, max: 20 })),
-    beginTimestamp: 0,
-    endTimestamp: 0,
-    aos: 0,
-    los: 0,
-    latitude: faker.address.latitude(),
-    longitude: faker.address.longitude(),
-    azimuth: faker.address.longitude(),
-    elevation: faker.datatype.float({ max: 90 }),
-    resolution: shuffle(options.resolutions),
-    resolutionStatus: shuffle(options.resolutionStatuses),
-    alerts: range(alertsRange).map(() => ({
-      id: faker.datatype.uuid(),
-      contactId,
-    })),
-  };
-};
+const ends = contacts.map((c) => c.endTimestamp);
+const starts = contacts.map((c) => c.beginTimestamp);
+const minStart = new Date(Math.min(...starts));
+const maxEnd = new Date(Math.max(...ends));
+const diff = minStart.getTime() - maxEnd.getTime();
 
-const generateContacts = (length: number) => {
-  return Array.from({ length }, (_, i) => generateContact(i));
-};
+console.log({
+  start: minStart.toUTCString(),
+  end: maxEnd.toUTCString(),
+  diff: diff / (1000 * 60 * 60),
+  begin: new Date(contacts[index].beginTimestamp).toUTCString(),
+  aos: new Date(contacts[index].aos).toUTCString(),
+  stop: new Date(contacts[index].endTimestamp).toUTCString(),
+  los: new Date(contacts[index].los).toUTCString(),
+  alerts: contacts.flatMap(({ alerts }) => alerts).length,
+  lat: contacts[index].latitude,
+  lng: contacts[index].longitude,
+  az: contacts[index].azimuth,
+});
 
-// createdAt: faker.datatype.datetime({ max: new Date().getTime() }),
+// import { onContactsChange } from '../src';
 
-console.log(generateContacts(101).flatMap(({ alerts }) => alerts));
+// const unsubscribe = onContactsChange((data) => {
+//   console.log(data.length);
+// });
+
+// setTimeout(() => {
+//   unsubscribe();
+// }, 1000 * 60 * 60 * 2);
