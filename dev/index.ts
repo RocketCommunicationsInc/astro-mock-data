@@ -1,8 +1,11 @@
 import { faker } from '@faker-js/faker';
-import { generateContacts } from '../src/lib/contacts/generate-contacts';
-// import { generateContact } from '../src/lib/contacts/generate-contact';
-// import { generateAlerts } from '../src/lib/alerts/generate-alerts';
-// import { generateAlert } from '../src/lib/alerts/generate-alert';
+import {
+  // generateAlert,
+  // generateAlerts,
+  // generateContact,
+  generateContacts,
+  // onContactsChange,
+} from '../src';
 
 const index = faker.datatype.number(99);
 
@@ -48,8 +51,6 @@ console.log({
   lng: contacts[index].longitude,
   az: contacts[index].azimuth,
 });
-
-// import { onContactsChange } from '../src';
 
 // const unsubscribe = onContactsChange((data) => {
 //   console.log(data.length);
