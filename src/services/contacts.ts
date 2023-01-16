@@ -1,10 +1,10 @@
-import { Contact } from '../types/contacts';
-import contacts from '../data/contacts.json';
-import { randomIntBetween } from '../utils';
+import { generateContacts } from '../lib/contacts/generate-contacts';
+import { Contact } from '../types';
+import { between } from '../utils';
 
 const subscribers: { [key: string]: Function[] } = {};
 const eventName = 'contacts';
-let count = randomIntBetween(10, 20);
+let count = between({ min: 10, max: 20 });
 
 const publish = (data: Contact[]) => {
   if (!Array.isArray(subscribers[eventName])) return;
@@ -18,6 +18,7 @@ type Unsubscribe = () => void;
 
 export const onContactsChange = (
   callback: (contacts: Contact[]) => void,
+  options?: { max?: number },
 ): Unsubscribe => {
   if (!Array.isArray(subscribers[eventName])) {
     subscribers[eventName] = [];
@@ -25,12 +26,13 @@ export const onContactsChange = (
 
   subscribers[eventName].push(callback);
   const index = subscribers[eventName].length - 1;
+  const contacts = generateContacts(options?.max);
 
   publish(contacts.slice(0, count) as Contact[]);
 
   const interval = setInterval(() => {
     if (count >= contacts.length) {
-      count = randomIntBetween(20, 30);
+      count = between({ min: 20, max: 30 });
       publish(contacts.slice(0, count) as Contact[]);
       return;
     }
