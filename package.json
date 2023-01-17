@@ -1,6 +1,6 @@
 {
-  "name": "@bkiern/data",
-  "version": "0.0.2",
+  "name": "@astrouxds/mock-data",
+  "version": "0.0.1",
   "description": "Mock data for use with Astro UXDS demo apps.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,11 +13,14 @@
     "dev": "ts-node-dev --respawn dev/index.ts"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/brikiernan/data"
+    "url": "https://github.com/RocketCommunicationsInc/astro-mock-data"
+  },
+  "author": "Rocket Communications, Inc",
+  "bugs": {
+    "url": "https://github.com/RocketCommunicationsInc/astro-mock-data/issues"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
