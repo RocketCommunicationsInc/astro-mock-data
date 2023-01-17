@@ -6,7 +6,7 @@ import { Contact, ContactOptions, Status } from '../../types';
 import { generateAlert } from '../alerts/generate-alert';
 import {
   between,
-  generateAlphaNumericChuncks,
+  generateEquipment,
   randomMinutes,
   randomSeconds,
   range,
@@ -52,10 +52,7 @@ export const generateContact = (
   // 4) LOS (Loss of Signal) random number of seconds before end
   const los = endTimestamp - randomSeconds(60, 300);
 
-  const equipments = generateAlphaNumericChuncks({
-    count: between({ min: 5, max: 7 }),
-    length: { min: 5, max: 10 },
-  });
+  const equipment = generateEquipment();
 
   return {
     id: contactId,
@@ -63,7 +60,7 @@ export const generateContact = (
     name: faker.datatype.number(),
     ground: shuffle(dataOption.grounds),
     satellite: 'USA-' + faker.random.alphaNumeric(5).toUpperCase(),
-    equipment: equipments.join(' ').toUpperCase(),
+    equipment,
     state: shuffle(dataOption.states),
     step: shuffle(dataOption.steps),
     detail: faker.lorem.sentence(between({ min: 8, max: 20 })),
@@ -78,7 +75,7 @@ export const generateContact = (
     resolution: shuffle(dataOption.resolutions),
     resolutionStatus: shuffle(dataOption.resolutionStatuses),
     alerts: range(alertsRange).map(() => {
-      return generateAlert({ end, equipments, refId: contactId, start });
+      return generateAlert({ end, equipment, refId: contactId, start });
     }),
   };
 };

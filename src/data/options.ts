@@ -3,6 +3,7 @@ import { Status } from '../types';
 type DataOptions = {
   categories: string[];
   errorTypes: string[];
+  equipments: string[];
   grounds: string[];
   resolutions: string[];
   resolutionStatuses: string[];
@@ -24,6 +25,18 @@ const options: DataOptions = {
     'Out of disk space',
     'Limited disk space',
     'NOLOCK',
+  ],
+  equipments: [
+    'ANT',
+    'BAFB',
+    'RVC',
+    'SLWS',
+    'USP',
+    'VAFB',
+    'WS',
+    'WSB',
+    'SFEP',
+    'ECEU',
   ],
   grounds: ['CTS', 'DGS', 'GTS', 'TCS', 'VTS', 'NHS', 'TTS', 'HTS'],
   resolutions: ['complete', 'failed', 'pass', 'prepass', 'scheduled'],

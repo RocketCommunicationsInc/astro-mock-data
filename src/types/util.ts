@@ -10,18 +10,9 @@ export type RangeOptions =
   | number
   | { start: number; stop: number; step?: number };
 
-type MinMaxPrecision = {
-  min?: number;
-  max?: number;
-  precision?: number;
-};
-
-export type BetweenOptions = number | MinMaxPrecision;
-
-export type ChuncksOptions = {
-  count: number;
-  length: MinMaxPrecision;
-};
+export type BetweenOptions =
+  | number
+  | { min?: number; max?: number; precision?: number };
 
 export type AlertsPercentageOptions =
   | 0

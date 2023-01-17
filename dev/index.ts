@@ -17,7 +17,7 @@ const contacts = generateContacts(100, {
 });
 // console.log(contacts);
 
-// const contact = generateContact(49);
+// const contact = generateContact(9);
 // console.log(contact);
 
 // const alerts = generateAlerts(3, { createdRef: '9/1/2001' });
@@ -25,12 +25,6 @@ const contacts = generateContacts(100, {
 
 // const alert = generateAlert({ refId: 'asdas' });
 // console.log(alert);
-
-// contacts.flatMap(({ alerts }, i) => {
-//   if (alerts.length > 0) {
-//     console.log(i, alerts.length);
-//   }
-// });
 
 const ends = contacts.map((c) => c.endTimestamp);
 const starts = contacts.map((c) => c.beginTimestamp);

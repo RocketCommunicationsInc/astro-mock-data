@@ -1,9 +1,10 @@
 import { faker } from '@faker-js/faker';
+
+import dataOption from '../data/options';
 import percentages from '../data/percentages';
 import {
   AlertsPercentageOptions,
   BetweenOptions,
-  ChuncksOptions,
   RangeOptions,
 } from '../types/util';
 
@@ -25,13 +26,14 @@ export const shuffle = <T>(arr: T[]) => {
   return shuffled[between(arr.length - 1)];
 };
 
-export const generateAlphaNumericChuncks = (options: ChuncksOptions) => {
-  const letter = faker.random.alpha();
-  const chunks = range(options.count).map(() => {
-    return letter + faker.random.alphaNumeric(between(options.length));
+export const generateEquipment = () => {
+  const shuffled = faker.helpers.shuffle(dataOption.equipments);
+  const prefixes = shuffled.slice(0, between({ min: 5, max: 7 }));
+  const equipments = prefixes.map((prefix) => {
+    return prefix + between({ min: 1, max: 20 });
   });
 
-  return chunks;
+  return equipments.sort().join(' ').toUpperCase();
 };
 
 export const setModulus = (percentage?: AlertsPercentageOptions) => {
