@@ -14,7 +14,7 @@ export type BetweenOptions =
   | number
   | { min?: number; max?: number; precision?: number };
 
-export type AlertsPercentageOptions =
+export type AlertsPercentage =
   | 0
   | 2
   | 3

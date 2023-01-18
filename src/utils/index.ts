@@ -2,11 +2,7 @@ import { faker } from '@faker-js/faker';
 
 import dataOption from '../data/options';
 import percentages from '../data/percentages';
-import {
-  AlertsPercentageOptions,
-  BetweenOptions,
-  RangeOptions,
-} from '../types/util';
+import { AlertsPercentage, BetweenOptions, RangeOptions } from '../types/util';
 
 export const range = (options: RangeOptions): number[] => {
   if (typeof options === 'number') {
@@ -36,12 +32,12 @@ export const generateEquipment = () => {
   return equipments.sort().join(' ').toUpperCase();
 };
 
-export const setModulus = (percentage?: AlertsPercentageOptions) => {
+export const setModulus = (percentage?: AlertsPercentage) => {
   if (typeof percentage === 'number') return percentages[percentage];
   return 10;
 };
 
-export const setSecondModulus = (percentage?: AlertsPercentageOptions) => {
+export const setSecondModulus = (percentage?: AlertsPercentage) => {
   if (typeof percentage === 'number') return percentages[percentage];
   return 50;
 };

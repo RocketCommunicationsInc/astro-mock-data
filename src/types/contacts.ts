@@ -1,9 +1,9 @@
 import { Alert } from './alert';
-import { AlertsPercentageOptions, Status } from './util';
+import { AlertsPercentage, Status } from './util';
 
 export type ContactOptions = {
-  alertsPercentage?: AlertsPercentageOptions;
-  secondAlertPercentage?: AlertsPercentageOptions;
+  alertsPercentage?: AlertsPercentage;
+  secondAlertPercentage?: AlertsPercentage;
   daysRange?: number;
   dateRef?: string | number | Date;
 };
