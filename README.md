@@ -180,44 +180,44 @@ Returns an unsubscribe function.
 
 ### Contact
 
-| Property         | Type    | Description |
-| ---------------- | ------- | ----------- |
-| id               | string  |             |
-| status           | Status  |             |
-| name             | number  |             |
-| ground           | string  |             |
-| satellite        | string  |             |
-| equipment        | string  |             |
-| state            | string  |             |
-| step             | string  |             |
-| detail           | string  |             |
-| beginTimestamp   | number  |             |
-| endTimestamp     | number  |             |
-| aos              | number  |             |
-| los              | number  |             |
-| latitude         | number  |             |
-| longitude        | number  |             |
-| azimuth          | number  |             |
-| elevation        | number  |             |
-| resolution       | string  |             |
-| resolutionStatus | string  |             |
-| alerts           | Alert[] |             |
+| Property         | Type    | Description                                                                                                                                                         |
+| ---------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id               | string  | uuid                                                                                                                                                                |
+| status           | Status  | 'caution' &#124; 'critical' &#124; 'normal' &#124; 'off' &#124; 'serious' &#124; 'standby'                                                                          |
+| name             | number  |                                                                                                                                                                     |
+| ground           | string  | 'CTS' &#124; 'DGS' &#124; 'GTS' &#124; 'TCS' &#124; 'VTS' &#124; 'NHS' &#124; 'TTS' &#124; 'HTS'                                                                    |
+| satellite        | string  |                                                                                                                                                                     |
+| equipment        | string  |                                                                                                                                                                     |
+| state            | string  | 'executing' &#124; 'failed' &#124; 'ready' &#124; 'updating'                                                                                                        |
+| step             | string  | 'AOS' &#124; 'Command' &#124; 'Configure Operation' &#124; 'Critical Health' &#124; 'DCC' &#124; 'Downlink' &#124; 'Lock' &#124; 'LOS' &#124; 'SARM'&#124; 'Uplink' |
+| detail           | string  |                                                                                                                                                                     |
+| beginTimestamp   | number  |                                                                                                                                                                     |
+| endTimestamp     | number  |                                                                                                                                                                     |
+| aos              | number  |                                                                                                                                                                     |
+| los              | number  |                                                                                                                                                                     |
+| latitude         | number  |                                                                                                                                                                     |
+| longitude        | number  |                                                                                                                                                                     |
+| azimuth          | number  |                                                                                                                                                                     |
+| elevation        | number  |                                                                                                                                                                     |
+| resolution       | string  | 'complete' &#124; 'failed' &#124; 'pass' &#124; 'prepass' &#124; 'scheduled'                                                                                        |
+| resolutionStatus | string  | 'normal' &#124; 'critical' &#124; 'off' &#124; 'standby'                                                                                                            |
+| alerts           | Alert[] |                                                                                                                                                                     |
 
 ### Alert
 
-| Property     | Type    | Description |
-| ------------ | ------- | ----------- |
-| id           | string  |             |
-| status       | Status  |             |
-| category     | string  |             |
-| message      | string  |             |
-| longMessage  | string  |             |
-| timestamp    | number  |             |
-| selected     | boolean |             |
-| new          | boolean |             |
-| expanded     | boolean |             |
-| acknowledged | boolean |             |
-| refId        | string  |             |
+| Property     | Type    | Description                                                                                |
+| ------------ | ------- | ------------------------------------------------------------------------------------------ |
+| id           | string  | uuid                                                                                       |
+| status       | Status  | 'caution' &#124; 'critical' &#124; 'normal' &#124; 'off' &#124; 'serious' &#124; 'standby' |
+| category     | string  | 'software' &#124; 'spacecraft' &#124; 'hardware'                                           |
+| message      | string  |                                                                                            |
+| longMessage  | string  |                                                                                            |
+| timestamp    | number  |                                                                                            |
+| selected     | boolean |                                                                                            |
+| new          | boolean |                                                                                            |
+| expanded     | boolean |                                                                                            |
+| acknowledged | boolean |                                                                                            |
+| refId        | string  | uuid &#124; ''                                                                             |
 
 ### Status
 
