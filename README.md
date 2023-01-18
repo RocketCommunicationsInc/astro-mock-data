@@ -1,6 +1,6 @@
-## Moch data for use with Astro UXDS demo apps
+# Astro UXDS Mock Data
 
-Generate "contacts" and "alerts" data for demo apps and testing.
+Generate "contacts" and "alerts" data for testing Astro Web Components and building demo applications.
 
 ## Install
 
@@ -10,7 +10,7 @@ npm install @astrouxds/mock-data
 
 ## Contacts
 
-Contacts include alerts with a "contact ref" on the alert based on where in the array (the index) a contact is. Meaning not all contacts with have alerts, only a percentage of them will.
+Contacts include alerts with a "contact ref" on the alert based on where in the array (the index) a contact is. Meaning not all contacts will have alerts, only a percentage of them will.
 
 ```ts
 import { generateContacts } from '@astrouxds/mock-data';
@@ -107,3 +107,122 @@ const App = () => {
 
 export default App;
 ```
+
+## API
+
+### generateContacts
+
+Returns an array of contacts.
+
+#### Parameters
+
+| Name                          | Type                             | Default | Description                                                                                                   |
+| ----------------------------- | -------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------- |
+| length                        | number                           | 100     | The total number of contacts to generate.                                                                     |
+| options                       | {...}                            | {}      | The options to use to generate the contacts. If no options are set, the defaults are used as described below. |
+| options.alertsPercentage      | AlertsPercentage                 | 10      | The percentage of contacts which should have an alert connected to them.                                      |
+| options.secondAlertPercentage | AlertsPercentage                 | 2       | The percentage of contacts which should have two alerts connected to them.                                    |
+| options.daysRange             | number                           | 1       | The range in days for the span between the start and end timestamps.                                          |
+| options.dateRef               | string &#124; number &#124; Date | now     | The date to reference when generating the contacts.                                                           |
+
+### generateContact
+
+Returns a single contact.
+
+#### Parameters
+
+| Name    | Type   | Default  | Description                                                             |
+| ------- | ------ | -------- | ----------------------------------------------------------------------- |
+| index   | number | required | The index is used to determine if an alert(s) is connected the contact. |
+| options | {...}  | {}       | The same options from <b>generateContacts</b>                           |
+
+### generateAlerts
+
+Returns an array of alerts.
+
+#### Parameters
+
+| Name               | Type                             | Default   | Description                                                                                                      |
+| ------------------ | -------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------- |
+| length             | number                           | 40        | The total number of alerts to generate.                                                                          |
+| options            | {...}                            | {}        | The options to use to generate the alerts. If no options are set, the defaults are used as described below.      |
+| options.refId      | string                           | undefined | A contact reference id. Will be an empty string if not provided.                                                 |
+| options.equipment  | string                           | undefined | An equipment config string. Will be generated if not provided.                                                   |
+| options.createdRef | string &#124; number &#124; Date | undefined | The date to reference when generating the alerts. If provided, this will override any start and end options set. |
+| options.start      | string &#124; number &#124; Date | undefined | The starting timestamp for the alert timestamp boundry.                                                          |
+| options.end        | string &#124; number &#124; Date | undefined | The ending timestamp for the alert timestamp boundry.                                                            |
+
+### generateAlert
+
+Returns a single alert.
+
+#### Parameters
+
+| Name    | Type  | Default | Description                                 |
+| ------- | ----- | ------- | ------------------------------------------- |
+| options | {...} | {}      | The same options from <b>generateAlerts</b> |
+
+### onContactsChange
+
+Publishes a new contact every 5 seconds up to 100 contacts by default.
+
+Returns an unsubscribe function.
+
+#### Parameters
+
+| Name        | Type     | Default  | Description                                               |
+| ----------- | -------- | -------- | --------------------------------------------------------- |
+| callback    | function | required | The callback function which provides the latest contacts. |
+| options     | {...}    | {}       | The options to use to generate the contacts.              |
+| options.max | number   | 100      | The total contacts to publish.                            |
+
+## Schema
+
+### Contact
+
+| Property         | Type    | Description |
+| ---------------- | ------- | ----------- |
+| id               | string  |             |
+| status           | Status  |             |
+| name             | number  |             |
+| ground           | string  |             |
+| satellite        | string  |             |
+| equipment        | string  |             |
+| state            | string  |             |
+| step             | string  |             |
+| detail           | string  |             |
+| beginTimestamp   | number  |             |
+| endTimestamp     | number  |             |
+| aos              | number  |             |
+| los              | number  |             |
+| latitude         | number  |             |
+| longitude        | number  |             |
+| azimuth          | number  |             |
+| elevation        | number  |             |
+| resolution       | string  |             |
+| resolutionStatus | string  |             |
+| alerts           | Alert[] |             |
+
+### Alert
+
+| Property     | Type    | Description |
+| ------------ | ------- | ----------- |
+| id           | string  |             |
+| status       | Status  |             |
+| category     | string  |             |
+| message      | string  |             |
+| longMessage  | string  |             |
+| timestamp    | number  |             |
+| selected     | boolean |             |
+| new          | boolean |             |
+| expanded     | boolean |             |
+| acknowledged | boolean |             |
+| refId        | string  |             |
+
+### Status
+
+'caution' | 'critical' | 'normal' | 'off'| 'serious'| 'standby'
+
+### AlertsPercentage
+
+0 | 2 | 3 | 4 | 5 | 10 | 12 | 15 | 20 | 25 | 34 | 50
