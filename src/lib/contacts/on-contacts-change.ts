@@ -1,6 +1,6 @@
-import { generateContacts } from '../lib/contacts/generate-contacts';
-import { Contact } from '../types';
-import { between } from '../utils';
+import { Contact, Unsubscribe } from '../../types';
+import { between } from '../../utils';
+import { generateContacts } from './generate-contacts';
 
 const subscribers: { [key: string]: Function[] } = {};
 const eventName = 'contacts';
@@ -13,8 +13,6 @@ const publish = (data: Contact[]) => {
     callback(data);
   });
 };
-
-type Unsubscribe = () => void;
 
 export const onContactsChange = (
   callback: (contacts: Contact[]) => void,

@@ -30,3 +30,16 @@ export type Contact = {
   resolutionStatus: string;
   alerts: Alert[];
 };
+
+export type ModifyContactParams = {
+  ground?: string;
+  satellite?: string;
+  equipment?: string;
+  state?: string;
+  step?: string;
+  detail?: string;
+  beginTimestamp?: number;
+  endTimestamp?: number;
+  resolution?: string;
+  resolutionStatus?: string;
+};
