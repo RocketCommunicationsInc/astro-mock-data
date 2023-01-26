@@ -8,6 +8,21 @@ Generate "contacts" and "alerts" data for testing Astro Web Components and build
 npm install @astrouxds/mock-data
 ```
 
+## Getting Started
+
+The example below creates a state object with the generated contacts and maps the alerts connected to those contacts on an alerts property.
+
+```ts
+const contacts = generateContacts();
+
+const state = {
+  contacts,
+  alerts: contacts.flatMap(({ alerts }) => alerts),
+};
+
+console.log(state);
+```
+
 ## Contacts
 
 Contacts include alerts with a "contact ref" on the alert based on where in the array (the index) a contact is. Meaning not all contacts will have alerts, only a percentage of them will.
@@ -125,6 +140,8 @@ Returns an array of contacts.
 | options.daysRange             | number                           | 1       | The range in days for the span between the start and end timestamps.                                          |
 | options.dateRef               | string &#124; number &#124; Date | now     | The date to reference when generating the contacts.                                                           |
 
+<br />
+
 ### generateContact
 
 Returns a single contact.
@@ -135,6 +152,8 @@ Returns a single contact.
 | ------- | ------ | -------- | ----------------------------------------------------------------------- |
 | index   | number | required | The index is used to determine if an alert(s) is connected the contact. |
 | options | {...}  | {}       | The same options from <b>generateContacts</b>                           |
+
+<br />
 
 ### generateAlerts
 
@@ -151,6 +170,8 @@ Returns an array of alerts.
 | options.createdRef | string &#124; number &#124; Date | undefined | The date to reference when generating the alerts. If provided, this will override any start and end options set. |
 | options.start      | string &#124; number &#124; Date | undefined | The starting timestamp for the alert timestamp boundry.                                                          |
 | options.end        | string &#124; number &#124; Date | undefined | The ending timestamp for the alert timestamp boundry.                                                            |
+
+<br />
 
 ### generateAlert
 
