@@ -13,6 +13,8 @@ npm install @astrouxds/mock-data
 The example below creates a state object with the generated contacts and maps the alerts connected to those contacts on an alerts property.
 
 ```ts
+import { generateContacts } from '@astrouxds/mock-data';
+
 const contacts = generateContacts();
 
 const state = {
