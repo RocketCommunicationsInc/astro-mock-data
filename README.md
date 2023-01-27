@@ -144,7 +144,7 @@ Returns an array of contacts.
 | options.daysRange             | number                           | 1       | The range in days for the span between the start and end timestamps.                                          |
 | options.dateRef               | string &#124; number &#124; Date | now     | The date to reference when generating the contacts.                                                           |
 
-####### `function`
+###### `function`
 
 ### generateContact
 
