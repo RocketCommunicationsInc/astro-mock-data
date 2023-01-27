@@ -4,21 +4,19 @@ import type {
   Contact,
   ContactOptions,
   ModifyContactParams,
+  OnContactsChangeOptions,
   Unsubscribe,
 } from '../types';
 
 export class ContactsService {
-  public data: Contact[] = [];
+  private _data: Contact[] = [];
   private _eventName = 'contacts';
-  private _limit: number = 0;
   private _subscribers: { [key: string]: Function[] } = {};
 
-  constructor(length?: number, options?: ContactOptions) {
-    this.data = generateContacts(length, options);
-  }
+  constructor() {}
 
   private _findIndex(id: string): number {
-    return this.data.findIndex((contact) => contact.id === id);
+    return this._data.findIndex((contact) => contact.id === id);
   }
 
   private _publish(contacts: Contact[]) {
@@ -31,20 +29,27 @@ export class ContactsService {
 
   public onContactsChange(
     callback: (contacts: Contact[]) => void,
-    options?: { max?: number; interval?: number },
+    options?: OnContactsChangeOptions,
   ): Unsubscribe {
     if (!Array.isArray(this._subscribers[this._eventName])) {
       this._subscribers[this._eventName] = [];
     }
 
-    this._limit = options?.max || 200;
+    const contactOptions: ContactOptions = {
+      alertsPercentage: options?.alertsPercentage,
+      dateRef: options?.dateRef,
+      daysRange: options?.daysRange,
+      secondAlertPercentage: options?.secondAlertPercentage,
+    };
+
     this._subscribers[this._eventName].push(callback);
+    this._data = generateContacts(options?.initial, contactOptions);
+    this._publish(this._data);
+
+    const limit = options?.limit || 200;
     const index = this._subscribers[this._eventName].length - 1;
-
-    this._publish(this.data);
-
     const interval = setInterval(() => {
-      if (this.data.length >= this._limit) return;
+      if (this._data.length >= limit) return;
       this.addContact();
     }, (options?.interval || 5) * 1000);
 
@@ -55,8 +60,8 @@ export class ContactsService {
   }
 
   public addContact() {
-    this.data = [...this.data, generateContact(this.data.length - 1)];
-    this._publish(this.data);
+    this._data = [...this._data, generateContact(this._data.length - 1)];
+    this._publish(this._data);
   }
 
   public modifyContact(id: string, params: ModifyContactParams) {
@@ -65,12 +70,12 @@ export class ContactsService {
       // @ts-expect-error key will be a contact property
       this.data[index][key] = value;
     });
-    this._publish(this.data);
+    this._publish(this._data);
   }
 
   public removeContact(id: string) {
     const index = this._findIndex(id);
-    this.data.splice(index, 1);
-    this._publish(this.data);
+    this._data.splice(index, 1);
+    this._publish(this._data);
   }
 }

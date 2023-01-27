@@ -8,6 +8,12 @@ export type ContactOptions = {
   dateRef?: string | number | Date;
 };
 
+export type OnContactsChangeOptions = ContactOptions & {
+  initial?: number;
+  interval?: number;
+  limit?: number;
+};
+
 export type Contact = {
   id: string;
   status: Status;
