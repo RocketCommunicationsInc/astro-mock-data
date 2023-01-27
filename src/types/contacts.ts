@@ -8,6 +8,12 @@ export type ContactOptions = {
   dateRef?: string | number | Date;
 };
 
+export type ContactsSubscribeOptions = ContactOptions & {
+  initial?: number;
+  interval?: number;
+  limit?: number;
+};
+
 export type Contact = {
   id: string;
   status: Status;
@@ -29,4 +35,17 @@ export type Contact = {
   resolution: string;
   resolutionStatus: string;
   alerts: Alert[];
+};
+
+export type ModifyContactParams = {
+  ground?: string;
+  satellite?: string;
+  equipment?: string;
+  state?: string;
+  step?: string;
+  detail?: string;
+  beginTimestamp?: number;
+  endTimestamp?: number;
+  resolution?: string;
+  resolutionStatus?: string;
 };
