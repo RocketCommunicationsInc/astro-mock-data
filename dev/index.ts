@@ -79,7 +79,7 @@ import { between } from '../src/utils';
 const contactsService = new ContactsService();
 
 let contacts: Contact[] = [];
-const unsubscribe = contactsService.onContactsChange(
+const unsubscribe = contactsService.subscribe(
   (data) => {
     console.log(data.length);
     contacts = data;
@@ -88,13 +88,14 @@ const unsubscribe = contactsService.onContactsChange(
 );
 
 setTimeout(() => {
+  console.log('unsubscribed...');
   unsubscribe();
 }, 1000 * 60 * 5);
 
 setTimeout(() => {
-  contactsService.removeContact(
-    contacts[between({ min: 0, max: contacts.length - 1 })].id,
-  );
+  const id = contacts[between({ min: 0, max: contacts.length - 1 })].id;
+  console.log('[Removed Contact]:', id);
+  contactsService.deleteContact(id);
 }, 1000 * 5);
 
 // setTimeout(() => {
