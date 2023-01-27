@@ -1,16 +1,20 @@
-import { Contact, ModifyContactParams, Unsubscribe } from '../types';
 import { generateContact } from '../lib/contacts/generate-contact';
 import { generateContacts } from '../lib/contacts/generate-contacts';
+import type {
+  Contact,
+  ContactOptions,
+  ModifyContactParams,
+  Unsubscribe,
+} from '../types';
 
 export class ContactsService {
   public data: Contact[] = [];
-  private eventName = 'contacts';
-  private subscribers: { [key: string]: Function[] } = {};
-  private limit: number = 0;
+  private _eventName = 'contacts';
+  private _limit: number = 0;
+  private _subscribers: { [key: string]: Function[] } = {};
 
-  constructor() {
-    this.data = generateContacts();
-    this.limit = 200;
+  constructor(length?: number, options?: ContactOptions) {
+    this.data = generateContacts(length, options);
   }
 
   private _findIndex(id: string): number {
@@ -18,34 +22,35 @@ export class ContactsService {
   }
 
   private _publish(contacts: Contact[]) {
-    if (!Array.isArray(this.subscribers[this.eventName])) return;
+    if (!Array.isArray(this._subscribers[this._eventName])) return;
 
-    this.subscribers[this.eventName].forEach((callback) => {
+    this._subscribers[this._eventName].forEach((callback) => {
       callback(contacts);
     });
   }
 
   public onContactsChange(
     callback: (contacts: Contact[]) => void,
-    options?: { max?: number },
+    options?: { max?: number; interval?: number },
   ): Unsubscribe {
-    if (!Array.isArray(this.subscribers[this.eventName])) {
-      this.subscribers[this.eventName] = [];
+    if (!Array.isArray(this._subscribers[this._eventName])) {
+      this._subscribers[this._eventName] = [];
     }
 
-    this.subscribers[this.eventName].push(callback);
-    const index = this.subscribers[this.eventName].length - 1;
+    this._limit = options?.max || 200;
+    this._subscribers[this._eventName].push(callback);
+    const index = this._subscribers[this._eventName].length - 1;
 
     this._publish(this.data);
 
     const interval = setInterval(() => {
-      if (this.data.length >= this.limit) return;
+      if (this.data.length >= this._limit) return;
       this.addContact();
-    }, 1000 * 10);
+    }, (options?.interval || 5) * 1000);
 
     return () => {
       clearInterval(interval);
-      this.subscribers[this.eventName].splice(index, 1);
+      this._subscribers[this._eventName].splice(index, 1);
     };
   }
 
@@ -57,7 +62,7 @@ export class ContactsService {
   public modifyContact(id: string, params: ModifyContactParams) {
     const index = this._findIndex(id);
     Object.entries(params).forEach(([key, value]) => {
-      // @ts-ignore key will be a contact property
+      // @ts-expect-error key will be a contact property
       this.data[index][key] = value;
     });
     this._publish(this.data);
