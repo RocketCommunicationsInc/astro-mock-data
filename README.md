@@ -209,7 +209,7 @@ Returns an unsubscribe function.
 
 Generates a given amount of initial contacts on the subscribe method, publishes a new contact every x amount of seconds, and has methods to add, modify, and delete a contact.
 
-Returns an instance of the ContactsService class.
+Returns an instance a ContactsService.
 
 #### Methods
 
