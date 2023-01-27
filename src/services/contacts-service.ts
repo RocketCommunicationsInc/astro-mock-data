@@ -3,8 +3,8 @@ import { generateContacts } from '../lib/contacts/generate-contacts';
 import type {
   Contact,
   ContactOptions,
+  ContactsSubscribeOptions,
   ModifyContactParams,
-  OnContactsChangeOptions,
   Unsubscribe,
 } from '../types';
 
@@ -27,9 +27,9 @@ export class ContactsService {
     });
   }
 
-  public onContactsChange(
+  public subscribe(
     callback: (contacts: Contact[]) => void,
-    options?: OnContactsChangeOptions,
+    options?: ContactsSubscribeOptions,
   ): Unsubscribe {
     if (!Array.isArray(this._subscribers[this._eventName])) {
       this._subscribers[this._eventName] = [];
@@ -59,23 +59,27 @@ export class ContactsService {
     };
   }
 
-  public addContact() {
-    this._data = [...this._data, generateContact(this._data.length - 1)];
+  public addContact(): Contact {
+    const addedContact = generateContact(this._data.length - 1);
+    this._data = [...this._data, addedContact];
     this._publish(this._data);
+    return addedContact;
   }
 
-  public modifyContact(id: string, params: ModifyContactParams) {
+  public modifyContact(id: string, params: ModifyContactParams): string {
     const index = this._findIndex(id);
     Object.entries(params).forEach(([key, value]) => {
       // @ts-expect-error key will be a contact property
       this.data[index][key] = value;
     });
     this._publish(this._data);
+    return `Successfully modified contact: ${id}`;
   }
 
-  public removeContact(id: string) {
+  public deleteContact(id: string): string {
     const index = this._findIndex(id);
     this._data.splice(index, 1);
     this._publish(this._data);
+    return `Successfully deleted contact: ${id}`;
   }
 }

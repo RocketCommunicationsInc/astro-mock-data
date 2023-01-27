@@ -8,7 +8,7 @@ export type ContactOptions = {
   dateRef?: string | number | Date;
 };
 
-export type OnContactsChangeOptions = ContactOptions & {
+export type ContactsSubscribeOptions = ContactOptions & {
   initial?: number;
   interval?: number;
   limit?: number;
