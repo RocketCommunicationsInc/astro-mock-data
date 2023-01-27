@@ -8,6 +8,23 @@ Generate "contacts" and "alerts" data for testing Astro Web Components and build
 npm install @astrouxds/mock-data
 ```
 
+## Getting Started
+
+The example below creates a state object with the generated contacts and maps the alerts connected to those contacts on an alerts property.
+
+```ts
+import { generateContacts } from '@astrouxds/mock-data';
+
+const contacts = generateContacts();
+
+const state = {
+  contacts,
+  alerts: contacts.flatMap(({ alerts }) => alerts),
+};
+
+console.log(state);
+```
+
 ## Contacts
 
 Contacts include alerts with a "contact ref" on the alert based on where in the array (the index) a contact is. Meaning not all contacts will have alerts, only a percentage of them will.
