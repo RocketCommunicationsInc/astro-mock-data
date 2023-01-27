@@ -127,7 +127,9 @@ export default App;
 
 ## API
 
-### generateContacts <small>`function`</small>
+### generateContacts
+
+##### function
 
 Returns an array of contacts.
 
@@ -142,7 +144,9 @@ Returns an array of contacts.
 | options.daysRange             | number                           | 1       | The range in days for the span between the start and end timestamps.                                          |
 | options.dateRef               | string &#124; number &#124; Date | now     | The date to reference when generating the contacts.                                                           |
 
-### generateContact <small>`function`</small>
+### generateContact
+
+##### function
 
 Returns a single contact.
 
@@ -153,7 +157,9 @@ Returns a single contact.
 | index   | number | required | The index is used to determine if an alert(s) is connected the contact. |
 | options | {...}  | {}       | The same options from <b>generateContacts</b>                           |
 
-### generateAlerts <small>`function`</small>
+### generateAlerts
+
+##### function
 
 Returns an array of alerts.
 
@@ -169,7 +175,9 @@ Returns an array of alerts.
 | options.start      | string &#124; number &#124; Date | undefined | The starting timestamp for the alert timestamp boundry.                                                          |
 | options.end        | string &#124; number &#124; Date | undefined | The ending timestamp for the alert timestamp boundry.                                                            |
 
-### generateAlert <small>`function`</small>
+### generateAlert
+
+##### function
 
 Returns a single alert.
 
@@ -179,7 +187,9 @@ Returns a single alert.
 | ------- | ----- | ------- | ------------------------------------------- |
 | options | {...} | {}      | The same options from <b>generateAlerts</b> |
 
-### onContactsChange <small>`function`</small>
+### onContactsChange
+
+##### function
 
 Publishes a new contact every 5 seconds up to 100 contacts by default.
 
@@ -193,72 +203,97 @@ Returns an unsubscribe function.
 | options     | {...}    | {}       | The options to use to generate the contacts.              |
 | options.max | number   | 100      | The total contacts to publish.                            |
 
-### ContactsService <small>`class`</small>
+### ContactsService
+
+##### class
 
 Generates a given amount of initial contacts on the subscribe method, publishes a new contact every x amount of seconds, and has methods to add, modify, and delete a contact.
 
-Returns an instance of the ContactsService class
+Returns an instance of the ContactsService class.
 
 #### Methods
 
-| Method    | Returns                 | Description |
-| --------- | ----------------------- | ----------- |
-| subscribe | An unsubscribe function | TODO        |
+`subscribe`
 
-> #### Parameters
->
-> | Name                          | Type                             | Default  | Description                                                                |
-> | ----------------------------- | -------------------------------- | -------- | -------------------------------------------------------------------------- |
-> | callback                      | (contacts: Contact[]) => void    | required | TODO                                                                       |
-> | options                       | ContactsSubscribeOptions         | {}       | TODO                                                                       |
-> | options.alertsPercentage      | AlertsPercentage                 | 10       | The percentage of contacts which should have an alert connected to them.   |
-> | options.secondAlertPercentage | AlertsPercentage                 | 2        | The percentage of contacts which should have two alerts connected to them. |
-> | options.daysRange             | number                           | 1        | The range in days for the span between the start and end timestamps.       |
-> | options.dateRef               | string &#124; number &#124; Date | now      | The date to reference when generating the contacts.                        |
-> | options.initial               | number                           | 100      | TODO                                                                       |
-> | options.interval              | number                           | 5        | TODO                                                                       |
-> | options.limit                 | number                           | 200      | TODO                                                                       |
+Subscribes to received published contacts.
 
-| Method     | Returns | Description                                                   |
-| ---------- | ------- | ------------------------------------------------------------- |
-| addContact | Contact | Adds a newly generated contact and returns the added contact. |
+Returns a function to unsubscribe.
 
-> #### Parameters
->
-> none
+##### Parameters
 
-| Method        | Returns | Description                                                   |
-| ------------- | ------- | ------------------------------------------------------------- |
-| modifyContact | string  | Modifies the specified contact and returns a success message. |
+| Name                          | Type                             | Default  | Description                                                                                                   |
+| ----------------------------- | -------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------- |
+| callback                      | (contacts: Contact[]) = void     | required | A callback function which receives the latest contacts array.                                                 |
+| options                       | ContactsSubscribeOptions         | {}       | The options to use to generate the contacts. If no options are set, the defaults are used as described below. |
+| options.alertsPercentage      | AlertsPercentage                 | 10       | The percentage of contacts which should have an alert connected to them.                                      |
+| options.secondAlertPercentage | AlertsPercentage                 | 2        | The percentage of contacts which should have two alerts connected to them.                                    |
+| options.daysRange             | number                           | 1        | The range in days for the span between the start and end timestamps.                                          |
+| options.dateRef               | string &#124; number &#124; Date | now      | The date to reference when generating the contacts.                                                           |
+| options.initial               | number                           | 100      | The initial number of contacts generated on subscribe.                                                        |
+| options.interval              | number                           | 5        | The interval in seconds which new contacts are generated and published.                                       |
+| options.limit                 | number                           | 200      | The limit of new contacts to generate and publish.                                                            |
 
-> #### Parameters
->
-> | Name                    | Type                    | Default   | Description                                 |
-> | ----------------------- | ----------------------- | --------- | ------------------------------------------- |
-> | id                      | uuid                    | required  | The id of the contact to modify.            |
-> | params                  | ModifyContactParams     | {}        | An optional params object.                  |
-> | params.ground           | ContactGround           | undefined | An optional property which can be modified. |
-> | params.satellite        | string                  | undefined | An optional property which can be modified. |
-> | params.equipment        | string                  | undefined | An optional property which can be modified. |
-> | params.state            | ContactState            | undefined | An optional property which can be modified. |
-> | params.step             | ContactStep             | undefined | An optional property which can be modified. |
-> | params.detail           | string                  | undefined | An optional property which can be modified. |
-> | params.beginTimestamp   | number                  | undefined | An optional property which can be modified. |
-> | params.endTimestamp     | number                  | undefined | An optional property which can be modified. |
-> | params.resolution       | ContactResolution       | undefined | An optional property which can be modified. |
-> | params.resolutionStatus | ContactResolutionStatus | undefined | An optional property which can be modified. |
+`addContact`
 
-| Method        | Returns | Description                                                  |
-| ------------- | ------- | ------------------------------------------------------------ |
-| deleteContact | string  | Deletes the specified contact and returns a success message. |
+Adds a newly generated contact.
 
-> #### Parameters
->
-> | Name | Type | Default  | Description                      |
-> | ---- | ---- | -------- | -------------------------------- |
-> | id   | uuid | required | The id of the contact to delete. |
+Returns the added contact.
+
+##### Parameters
+
+| Name | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+|      |      |         |             |
+
+`modifyContact`
+
+Modifies the specified contact.
+
+Returns a success message.
+
+##### Parameters
+
+| Name                    | Type                    | Default   | Description                                 |
+| ----------------------- | ----------------------- | --------- | ------------------------------------------- |
+| id                      | uuid                    | required  | The id of the contact to modify.            |
+| params                  | ModifyContactParams     | {}        | An optional params object.                  |
+| params.ground           | ContactGround           | undefined | An optional property which can be modified. |
+| params.satellite        | string                  | undefined | An optional property which can be modified. |
+| params.equipment        | string                  | undefined | An optional property which can be modified. |
+| params.state            | ContactState            | undefined | An optional property which can be modified. |
+| params.step             | ContactStep             | undefined | An optional property which can be modified. |
+| params.detail           | string                  | undefined | An optional property which can be modified. |
+| params.beginTimestamp   | number                  | undefined | An optional property which can be modified. |
+| params.endTimestamp     | number                  | undefined | An optional property which can be modified. |
+| params.resolution       | ContactResolution       | undefined | An optional property which can be modified. |
+| params.resolutionStatus | ContactResolutionStatus | undefined | An optional property which can be modified. |
+
+`deleteContact`
+
+Deletes the specified contact.
+
+Returns a success message.
+
+##### Parameters
+
+| Name | Type | Default  | Description                      |
+| ---- | ---- | -------- | -------------------------------- |
+| id   | uuid | required | The id of the contact to delete. |
 
 ## Schema
+
+### Types
+
+| Type                    | Description                                                                                                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AlertCategory           | 'software' &#124; 'spacecraft' &#124; 'hardware'                                                                                                                    |
+| AlertsPercentage        | 0 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 10 &#124; 12 &#124; 15 &#124; 20 &#124; 25 &#124; 34 &#124; 50                                                         |
+| ContactGround           | 'CTS' &#124; 'DGS' &#124; 'GTS' &#124; 'TCS' &#124; 'VTS' &#124; 'NHS' &#124; 'TTS' &#124; 'HTS'                                                                    |
+| ContactState            | 'executing' &#124; 'failed' &#124; 'ready' &#124; 'updating'                                                                                                        |
+| ContactStep             | 'AOS' &#124; 'Command' &#124; 'Configure Operation' &#124; 'Critical Health' &#124; 'DCC' &#124; 'Downlink' &#124; 'Lock' &#124; 'LOS' &#124; 'SARM'&#124; 'Uplink' |
+| ContactResolution       | 'complete' &#124; 'failed' &#124; 'pass' &#124; 'prepass' &#124; 'scheduled'                                                                                        |
+| ContactResolutionStatus | 'normal' &#124; 'critical' &#124; 'off' &#124; 'standby'                                                                                                            |
+| Status                  | 'caution' &#124; 'critical' &#124; 'normal' &#124; 'off' &#124; 'serious' &#124; 'standby'                                                                          |
 
 ### Contact
 
@@ -300,16 +335,3 @@ Returns an instance of the ContactsService class
 | expanded     | boolean       |                |
 | acknowledged | boolean       |                |
 | refId        | string        | uuid &#124; '' |
-
-### Types
-
-| Type                    | Description                                                                                                                                                         |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AlertCategory           | 'software' &#124; 'spacecraft' &#124; 'hardware'                                                                                                                    |
-| AlertsPercentage        | 0 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 10 &#124; 12 &#124; 15 &#124; 20 &#124; 25 &#124; 34 &#124; 50                                                         |
-| ContactGround           | 'CTS' &#124; 'DGS' &#124; 'GTS' &#124; 'TCS' &#124; 'VTS' &#124; 'NHS' &#124; 'TTS' &#124; 'HTS'                                                                    |
-| ContactState            | 'executing' &#124; 'failed' &#124; 'ready' &#124; 'updating'                                                                                                        |
-| ContactStep             | 'AOS' &#124; 'Command' &#124; 'Configure Operation' &#124; 'Critical Health' &#124; 'DCC' &#124; 'Downlink' &#124; 'Lock' &#124; 'LOS' &#124; 'SARM'&#124; 'Uplink' |
-| ContactResolution       | 'complete' &#124; 'failed' &#124; 'pass' &#124; 'prepass' &#124; 'scheduled'                                                                                        |
-| ContactResolutionStatus | 'normal' &#124; 'critical' &#124; 'off' &#124; 'standby'                                                                                                            |
-| Status                  | 'caution' &#124; 'critical' &#124; 'normal' &#124; 'off' &#124; 'serious' &#124; 'standby'                                                                          |
