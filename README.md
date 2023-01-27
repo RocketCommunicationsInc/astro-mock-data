@@ -127,9 +127,9 @@ export default App;
 
 ## API
 
-### generateContacts
+##### `function`
 
-##### function
+### generateContacts
 
 Returns an array of contacts.
 
@@ -144,9 +144,9 @@ Returns an array of contacts.
 | options.daysRange             | number                           | 1       | The range in days for the span between the start and end timestamps.                                          |
 | options.dateRef               | string &#124; number &#124; Date | now     | The date to reference when generating the contacts.                                                           |
 
-### generateContact
+##### `function`
 
-##### function
+### generateContact
 
 Returns a single contact.
 
@@ -157,9 +157,9 @@ Returns a single contact.
 | index   | number | required | The index is used to determine if an alert(s) is connected the contact. |
 | options | {...}  | {}       | The same options from <b>generateContacts</b>                           |
 
-### generateAlerts
+##### `function`
 
-##### function
+### generateAlerts
 
 Returns an array of alerts.
 
@@ -175,9 +175,9 @@ Returns an array of alerts.
 | options.start      | string &#124; number &#124; Date | undefined | The starting timestamp for the alert timestamp boundry.                                                          |
 | options.end        | string &#124; number &#124; Date | undefined | The ending timestamp for the alert timestamp boundry.                                                            |
 
-### generateAlert
+##### `function`
 
-##### function
+### generateAlert
 
 Returns a single alert.
 
@@ -187,9 +187,9 @@ Returns a single alert.
 | ------- | ----- | ------- | ------------------------------------------- |
 | options | {...} | {}      | The same options from <b>generateAlerts</b> |
 
-### onContactsChange
+##### `function`
 
-##### function
+### onContactsChange
 
 Publishes a new contact every 5 seconds up to 100 contacts by default.
 
@@ -203,9 +203,9 @@ Returns an unsubscribe function.
 | options     | {...}    | {}       | The options to use to generate the contacts.              |
 | options.max | number   | 100      | The total contacts to publish.                            |
 
-### ContactsService
+##### `class`
 
-##### class
+### ContactsService
 
 Generates a given amount of initial contacts on the subscribe method, publishes a new contact every x amount of seconds, and has methods to add, modify, and delete a contact.
 
