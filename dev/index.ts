@@ -59,9 +59,12 @@ import { between } from '../src/utils';
 
 const contacts = new ContactsService();
 
-const unsubscribe = contacts.onContactsChange((contacts) => {
-  console.log(contacts.length);
-});
+const unsubscribe = contacts.onContactsChange(
+  (contacts) => {
+    console.log(contacts.length);
+  },
+  { interval: 2, max: 50 },
+);
 
 setTimeout(() => {
   unsubscribe();
