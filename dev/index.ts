@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import {
+  Contact,
   ContactsService,
   // generateAlert,
   // generateAlerts,
@@ -75,13 +76,15 @@ import { between } from '../src/utils';
 //   unsubscribe();
 // }, 1000 * 60 * 60 * 2);
 
-const contacts = new ContactsService();
+const contactsService = new ContactsService();
 
-const unsubscribe = contacts.onContactsChange(
-  (contacts) => {
-    console.log(contacts.length);
+let contacts: Contact[] = [];
+const unsubscribe = contactsService.onContactsChange(
+  (data) => {
+    console.log(data.length);
+    contacts = data;
   },
-  { interval: 2, max: 50 },
+  { initial: 10, interval: 2, limit: 20 },
 );
 
 setTimeout(() => {
@@ -89,7 +92,9 @@ setTimeout(() => {
 }, 1000 * 60 * 5);
 
 setTimeout(() => {
-  contacts.removeContact(contacts.data[between({ min: 10, max: 80 })].id);
+  contactsService.removeContact(
+    contacts[between({ min: 0, max: contacts.length - 1 })].id,
+  );
 }, 1000 * 5);
 
 // setTimeout(() => {
