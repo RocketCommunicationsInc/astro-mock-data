@@ -127,7 +127,7 @@ export default App;
 
 ## API
 
-##### `function`
+###### `function`
 
 ### generateContacts
 
@@ -144,7 +144,7 @@ Returns an array of contacts.
 | options.daysRange             | number                           | 1       | The range in days for the span between the start and end timestamps.                                          |
 | options.dateRef               | string &#124; number &#124; Date | now     | The date to reference when generating the contacts.                                                           |
 
-##### `function`
+####### `function`
 
 ### generateContact
 
@@ -157,7 +157,7 @@ Returns a single contact.
 | index   | number | required | The index is used to determine if an alert(s) is connected the contact. |
 | options | {...}  | {}       | The same options from <b>generateContacts</b>                           |
 
-##### `function`
+###### `function`
 
 ### generateAlerts
 
@@ -175,7 +175,7 @@ Returns an array of alerts.
 | options.start      | string &#124; number &#124; Date | undefined | The starting timestamp for the alert timestamp boundry.                                                          |
 | options.end        | string &#124; number &#124; Date | undefined | The ending timestamp for the alert timestamp boundry.                                                            |
 
-##### `function`
+###### `function`
 
 ### generateAlert
 
@@ -187,7 +187,7 @@ Returns a single alert.
 | ------- | ----- | ------- | ------------------------------------------- |
 | options | {...} | {}      | The same options from <b>generateAlerts</b> |
 
-##### `function`
+###### `function`
 
 ### onContactsChange
 
@@ -203,7 +203,7 @@ Returns an unsubscribe function.
 | options     | {...}    | {}       | The options to use to generate the contacts.              |
 | options.max | number   | 100      | The total contacts to publish.                            |
 
-##### `class`
+###### `class`
 
 ### ContactsService
 
