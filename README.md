@@ -65,7 +65,7 @@ const alerts = generateAlerts(5); // returns 5 alerts
 
 ## Contacts Subscriber
 
-The contacts subscriber will publish a new contact every 5 seconds up to 100 contacts by default.
+The contacts subscriber publishes 100 contacts and generates a new contact every 5 seconds up to 200 contacts by default.
 
 ```ts
 import { onContactsChange } from '@astrouxds/mock-data';
@@ -81,8 +81,8 @@ With options as second argument
 
 ```ts
 const unsubscribe = onContactsChange(
-  (contacts) => console.log(contacts.length),
-  { max: 50 }, // options with a max of 50
+  (contacts) => console.log(contacts),
+  { limit: 50 }, // options with a limit of 50
 );
 ```
 
@@ -199,7 +199,7 @@ Returns an unsubscribe function.
 
 | Name                          | Type                             | Default  | Description                                                                |
 | ----------------------------- | -------------------------------- | -------- | -------------------------------------------------------------------------- |
-| callback                      | (contacts: Contact[]) = void     | required | A callback function which receives the latest contacts array.              |
+| callback                      | (contacts: Contact[]) => void    | required | A callback function which receives the latest contacts array.              |
 | options                       | OnContactChangeOptions           | {}       | If no options are set, the defaults are used as described below.           |
 | options.alertsPercentage      | AlertsPercentage                 | 10       | The percentage of contacts which should have an alert connected to them.   |
 | options.secondAlertPercentage | AlertsPercentage                 | 2        | The percentage of contacts which should have two alerts connected to them. |
@@ -240,9 +240,9 @@ Returns a function to unsubscribe.
 
 ##### Parameters
 
-| Name     | Type                         | Default  | Description                                                   |
-| -------- | ---------------------------- | -------- | ------------------------------------------------------------- |
-| callback | (contacts: Contact[]) = void | required | A callback function which receives the latest contacts array. |
+| Name     | Type                          | Default  | Description                                                   |
+| -------- | ----------------------------- | -------- | ------------------------------------------------------------- |
+| callback | (contacts: Contact[]) => void | required | A callback function which receives the latest contacts array. |
 
 `addContact`
 
@@ -264,20 +264,20 @@ Returns a success message.
 
 ##### Parameters
 
-| Name                    | Type                    | Default   | Description                                 |
-| ----------------------- | ----------------------- | --------- | ------------------------------------------- |
-| id                      | uuid                    | required  | The id of the contact to modify.            |
-| params                  | ModifyContactParams     | {}        | An optional params object.                  |
-| params.ground           | ContactGround           | undefined | An optional property which can be modified. |
-| params.satellite        | string                  | undefined | An optional property which can be modified. |
-| params.equipment        | string                  | undefined | An optional property which can be modified. |
-| params.state            | ContactState            | undefined | An optional property which can be modified. |
-| params.step             | ContactStep             | undefined | An optional property which can be modified. |
-| params.detail           | string                  | undefined | An optional property which can be modified. |
-| params.beginTimestamp   | number                  | undefined | An optional property which can be modified. |
-| params.endTimestamp     | number                  | undefined | An optional property which can be modified. |
-| params.resolution       | ContactResolution       | undefined | An optional property which can be modified. |
-| params.resolutionStatus | ContactResolutionStatus | undefined | An optional property which can be modified. |
+| Name                    | Type                    | Default   | Description                      |
+| ----------------------- | ----------------------- | --------- | -------------------------------- |
+| id                      | uuid                    | required  | The id of the contact to modify. |
+| params                  | ModifyContactParams     | {}        | An optional params object.       |
+| params.ground           | ContactGround           | undefined | Optional property to modify.     |
+| params.satellite        | string                  | undefined | Optional property to modify.     |
+| params.equipment        | string                  | undefined | Optional property to modify.     |
+| params.state            | ContactState            | undefined | Optional property to modify.     |
+| params.step             | ContactStep             | undefined | Optional property to modify.     |
+| params.detail           | string                  | undefined | Optional property to modify.     |
+| params.beginTimestamp   | number                  | undefined | Optional property to modify.     |
+| params.endTimestamp     | number                  | undefined | Optional property to modify.     |
+| params.resolution       | ContactResolution       | undefined | Optional property to modify.     |
+| params.resolutionStatus | ContactResolutionStatus | undefined | Optional property to modify.     |
 
 `deleteContact`
 
