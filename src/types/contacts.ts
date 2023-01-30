@@ -1,5 +1,5 @@
 import { Alert } from './alert';
-import { AlertsPercentage, Status } from './util';
+import { AlertsPercentage, Status, SubscribeOptions } from './util';
 
 export type ContactOptions = {
   alertsPercentage?: AlertsPercentage;
@@ -8,11 +8,8 @@ export type ContactOptions = {
   dateRef?: string | number | Date;
 };
 
-export type ContactsSubscribeOptions = ContactOptions & {
-  initial?: number;
-  interval?: number;
-  limit?: number;
-};
+export type ContactsServiceOptions = ContactOptions & SubscribeOptions;
+export type OnContactChangeOptions = ContactOptions & SubscribeOptions;
 
 export type Contact = {
   id: string;

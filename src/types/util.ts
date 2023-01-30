@@ -1,3 +1,9 @@
+export type SubscribeOptions = {
+  initial?: number;
+  interval?: number;
+  limit?: number;
+};
+
 export type Unsubscribe = () => void;
 
 export type Status =
