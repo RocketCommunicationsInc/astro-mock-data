@@ -65,7 +65,7 @@ const alerts = generateAlerts(5); // returns 5 alerts
 
 ## Contacts Subscriber
 
-The contacts subscriber will publish a new contact every 5 seconds up to 100 contacts by default.
+Publishes 100 contacts and generates a new contact every 5 seconds up to 200 contacts by default.
 
 ```ts
 import { onContactsChange } from '@astrouxds/mock-data';
@@ -81,8 +81,8 @@ With options as second argument
 
 ```ts
 const unsubscribe = onContactsChange(
-  (contacts) => console.log(contacts.length),
-  { max: 50 }, // options with a max of 50
+  (contacts) => console.log(contacts),
+  { limit: 50 }, // options with a limit of 50
 );
 ```
 
@@ -135,14 +135,14 @@ Returns an array of contacts.
 
 #### Parameters
 
-| Name                          | Type                             | Default | Description                                                                                                   |
-| ----------------------------- | -------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------- |
-| length                        | number                           | 100     | The total number of contacts to generate.                                                                     |
-| options                       | {...}                            | {}      | The options to use to generate the contacts. If no options are set, the defaults are used as described below. |
-| options.alertsPercentage      | AlertsPercentage                 | 10      | The percentage of contacts which should have an alert connected to them.                                      |
-| options.secondAlertPercentage | AlertsPercentage                 | 2       | The percentage of contacts which should have two alerts connected to them.                                    |
-| options.daysRange             | number                           | 1       | The range in days for the span between the start and end timestamps.                                          |
-| options.dateRef               | string &#124; number &#124; Date | now     | The date to reference when generating the contacts.                                                           |
+| Name                          | Type                             | Default | Description                                                                |
+| ----------------------------- | -------------------------------- | ------- | -------------------------------------------------------------------------- |
+| length                        | number                           | 100     | The total number of contacts to generate.                                  |
+| options                       | {...}                            | {}      | If no options are set, the defaults are used as described below.           |
+| options.alertsPercentage      | AlertsPercentage                 | 10      | The percentage of contacts which should have an alert connected to them.   |
+| options.secondAlertPercentage | AlertsPercentage                 | 2       | The percentage of contacts which should have two alerts connected to them. |
+| options.daysRange             | number                           | 1       | The range in days for the span between the start and end timestamps.       |
+| options.dateRef               | string &#124; number &#124; Date | now     | The date to reference when generating the contacts.                        |
 
 ###### `function`
 
@@ -168,7 +168,7 @@ Returns an array of alerts.
 | Name               | Type                             | Default   | Description                                                                                                      |
 | ------------------ | -------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------- |
 | length             | number                           | 40        | The total number of alerts to generate.                                                                          |
-| options            | {...}                            | {}        | The options to use to generate the alerts. If no options are set, the defaults are used as described below.      |
+| options            | {...}                            | {}        | If no options are set, the defaults are used as described below.                                                 |
 | options.refId      | string                           | undefined | A contact reference id. Will be an empty string if not provided.                                                 |
 | options.equipment  | string                           | undefined | An equipment config string. Will be generated if not provided.                                                   |
 | options.createdRef | string &#124; number &#124; Date | undefined | The date to reference when generating the alerts. If provided, this will override any start and end options set. |
@@ -191,25 +191,44 @@ Returns a single alert.
 
 ### onContactsChange
 
-Publishes a new contact every 5 seconds up to 100 contacts by default.
+Publishes 100 contacts and generates a new contact every 5 seconds up to 200 contacts by default.
 
 Returns an unsubscribe function.
 
 #### Parameters
 
-| Name        | Type     | Default  | Description                                               |
-| ----------- | -------- | -------- | --------------------------------------------------------- |
-| callback    | function | required | The callback function which provides the latest contacts. |
-| options     | {...}    | {}       | The options to use to generate the contacts.              |
-| options.max | number   | 100      | The total contacts to publish.                            |
+| Name                          | Type                             | Default  | Description                                                                |
+| ----------------------------- | -------------------------------- | -------- | -------------------------------------------------------------------------- |
+| callback                      | (contacts: Contact[]) => void    | required | A callback function which receives the latest contacts array.              |
+| options                       | OnContactChangeOptions           | {}       | If no options are set, the defaults are used as described below.           |
+| options.alertsPercentage      | AlertsPercentage                 | 10       | The percentage of contacts which should have an alert connected to them.   |
+| options.secondAlertPercentage | AlertsPercentage                 | 2        | The percentage of contacts which should have two alerts connected to them. |
+| options.daysRange             | number                           | 1        | The range in days for the span between the start and end timestamps.       |
+| options.dateRef               | string &#124; number &#124; Date | now      | The date to reference when generating the contacts.                        |
+| options.initial               | number                           | 100      | The initial number of contacts generated on subscribe.                     |
+| options.interval              | number                           | 5        | The interval in seconds which new contacts are generated and published.    |
+| options.limit                 | number                           | 200      | The limit of new contacts to generate and publish.                         |
 
 ###### `class`
 
 ### ContactsService
 
-Generates a given amount of initial contacts on the subscribe method, publishes a new contact every x amount of seconds, and has methods to add, modify, and delete a contact.
+Generates initial contacts, publishes a new contact every x amount of seconds, and has methods to add, modify, and delete a contact.
 
 Returns an instance a ContactsService.
+
+##### Parameters
+
+| Name                          | Type                             | Default | Description                                                                |
+| ----------------------------- | -------------------------------- | ------- | -------------------------------------------------------------------------- |
+| options                       | ContactsServiceOptions           | {}      | If no options are set, the defaults are used as described below.           |
+| options.alertsPercentage      | AlertsPercentage                 | 10      | The percentage of contacts which should have an alert connected to them.   |
+| options.secondAlertPercentage | AlertsPercentage                 | 2       | The percentage of contacts which should have two alerts connected to them. |
+| options.daysRange             | number                           | 1       | The range in days for the span between the start and end timestamps.       |
+| options.dateRef               | string &#124; number &#124; Date | now     | The date to reference when generating the contacts.                        |
+| options.initial               | number                           | 100     | The initial number of contacts generated on subscribe.                     |
+| options.interval              | number                           | 5       | The interval in seconds which new contacts are generated and published.    |
+| options.limit                 | number                           | 200     | The limit of new contacts to generate and publish.                         |
 
 #### Methods
 
@@ -221,17 +240,9 @@ Returns a function to unsubscribe.
 
 ##### Parameters
 
-| Name                          | Type                             | Default  | Description                                                                                                   |
-| ----------------------------- | -------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------- |
-| callback                      | (contacts: Contact[]) = void     | required | A callback function which receives the latest contacts array.                                                 |
-| options                       | ContactsSubscribeOptions         | {}       | The options to use to generate the contacts. If no options are set, the defaults are used as described below. |
-| options.alertsPercentage      | AlertsPercentage                 | 10       | The percentage of contacts which should have an alert connected to them.                                      |
-| options.secondAlertPercentage | AlertsPercentage                 | 2        | The percentage of contacts which should have two alerts connected to them.                                    |
-| options.daysRange             | number                           | 1        | The range in days for the span between the start and end timestamps.                                          |
-| options.dateRef               | string &#124; number &#124; Date | now      | The date to reference when generating the contacts.                                                           |
-| options.initial               | number                           | 100      | The initial number of contacts generated on subscribe.                                                        |
-| options.interval              | number                           | 5        | The interval in seconds which new contacts are generated and published.                                       |
-| options.limit                 | number                           | 200      | The limit of new contacts to generate and publish.                                                            |
+| Name     | Type                          | Default  | Description                                                   |
+| -------- | ----------------------------- | -------- | ------------------------------------------------------------- |
+| callback | (contacts: Contact[]) => void | required | A callback function which receives the latest contacts array. |
 
 `addContact`
 
@@ -253,20 +264,20 @@ Returns a success message.
 
 ##### Parameters
 
-| Name                    | Type                    | Default   | Description                                 |
-| ----------------------- | ----------------------- | --------- | ------------------------------------------- |
-| id                      | uuid                    | required  | The id of the contact to modify.            |
-| params                  | ModifyContactParams     | {}        | An optional params object.                  |
-| params.ground           | ContactGround           | undefined | An optional property which can be modified. |
-| params.satellite        | string                  | undefined | An optional property which can be modified. |
-| params.equipment        | string                  | undefined | An optional property which can be modified. |
-| params.state            | ContactState            | undefined | An optional property which can be modified. |
-| params.step             | ContactStep             | undefined | An optional property which can be modified. |
-| params.detail           | string                  | undefined | An optional property which can be modified. |
-| params.beginTimestamp   | number                  | undefined | An optional property which can be modified. |
-| params.endTimestamp     | number                  | undefined | An optional property which can be modified. |
-| params.resolution       | ContactResolution       | undefined | An optional property which can be modified. |
-| params.resolutionStatus | ContactResolutionStatus | undefined | An optional property which can be modified. |
+| Name                    | Type                    | Default   | Description                      |
+| ----------------------- | ----------------------- | --------- | -------------------------------- |
+| id                      | uuid                    | required  | The id of the contact to modify. |
+| params                  | ModifyContactParams     | {}        | An optional params object.       |
+| params.ground           | ContactGround           | undefined | Optional property to modify.     |
+| params.satellite        | string                  | undefined | Optional property to modify.     |
+| params.equipment        | string                  | undefined | Optional property to modify.     |
+| params.state            | ContactState            | undefined | Optional property to modify.     |
+| params.step             | ContactStep             | undefined | Optional property to modify.     |
+| params.detail           | string                  | undefined | Optional property to modify.     |
+| params.beginTimestamp   | number                  | undefined | Optional property to modify.     |
+| params.endTimestamp     | number                  | undefined | Optional property to modify.     |
+| params.resolution       | ContactResolution       | undefined | Optional property to modify.     |
+| params.resolutionStatus | ContactResolutionStatus | undefined | Optional property to modify.     |
 
 `deleteContact`
 

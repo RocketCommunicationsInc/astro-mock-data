@@ -1,15 +1,15 @@
-import { faker } from '@faker-js/faker';
+// import { faker } from '@faker-js/faker';
+import { between } from '../src/utils';
 import {
   Contact,
   ContactsService,
   // generateAlert,
   // generateAlerts,
-  generateContact,
-  generateContacts,
-  ModifyContactParams,
+  // generateContact,
+  // generateContacts,
+  // ModifyContactParams,
   // onContactsChange,
 } from '../src';
-import { between } from '../src/utils';
 
 // const index = faker.datatype.number(99);
 
@@ -54,38 +54,27 @@ import { between } from '../src/utils';
 //   lng: contacts[index].longitude,
 //   az: contacts[index].azimuth,
 // });
-// console.log({
-//   start: minStart.toUTCString(),
-//   end: maxEnd.toUTCString(),
-//   diff: diff / (1000 * 60 * 60),
-//   begin: new Date(contacts[index].beginTimestamp).toUTCString(),
-//   aos: new Date(contacts[index].aos).toUTCString(),
-//   stop: new Date(contacts[index].endTimestamp).toUTCString(),
-//   los: new Date(contacts[index].los).toUTCString(),
-//   alerts: contacts.flatMap(({ alerts }) => alerts).length,
-//   lat: contacts[index].latitude,
-//   lng: contacts[index].longitude,
-//   az: contacts[index].azimuth,
-// });
 
 // const unsubscribe = onContactsChange((data) => {
-//   console.log(data.length);
+//   console.log(data[data.length - 1]);
 // });
 
 // setTimeout(() => {
+//   console.log('unsubscribed...');
 //   unsubscribe();
-// }, 1000 * 60 * 60 * 2);
+// }, 1000 * 60);
 
-const contactsService = new ContactsService();
+const contactsService = new ContactsService({
+  initial: 10,
+  interval: 2,
+  limit: 20,
+});
 
 let contacts: Contact[] = [];
-const unsubscribe = contactsService.subscribe(
-  (data) => {
-    console.log(data.length);
-    contacts = data;
-  },
-  { initial: 10, interval: 2, limit: 20 },
-);
+const unsubscribe = contactsService.subscribe((data) => {
+  console.log(data.length);
+  contacts = data;
+});
 
 setTimeout(() => {
   console.log('unsubscribed...');
@@ -98,16 +87,18 @@ setTimeout(() => {
   contactsService.deleteContact(id);
 }, 1000 * 5);
 
-// setTimeout(() => {
-//   contacts.modifyContact(contacts.data[between({ min: 10, max: 80 })].id, {
-//     state: 'new state',
-//     detail: 'laksjd asjld laksjd alsjkd adjlaskdj',
-//   });
-// }, 1000 * 7);
+setTimeout(() => {
+  const id = contacts[between({ min: 0, max: contacts.length - 1 })].id;
+  console.log('[Modified Contact]:', id);
+  contactsService.modifyContact(id, {
+    state: 'new state',
+    detail: 'laksjd asjld laksjd alsjkd adjlaskdj',
+  });
+}, 1000 * 7);
 
-// setTimeout(() => {
-//   contacts.addContact();
-//   contacts.addContact();
-//   contacts.addContact();
-//   contacts.addContact();
-// }, 1000 * 15);
+setTimeout(() => {
+  contactsService.addContact();
+  contactsService.addContact();
+  contactsService.addContact();
+  contactsService.addContact();
+}, 1000 * 15);
