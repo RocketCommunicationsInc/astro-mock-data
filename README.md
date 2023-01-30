@@ -65,7 +65,7 @@ const alerts = generateAlerts(5); // returns 5 alerts
 
 ## Contacts Subscriber
 
-The contacts subscriber publishes 100 contacts and generates a new contact every 5 seconds up to 200 contacts by default.
+Publishes 100 contacts and generates a new contact every 5 seconds up to 200 contacts by default.
 
 ```ts
 import { onContactsChange } from '@astrouxds/mock-data';
