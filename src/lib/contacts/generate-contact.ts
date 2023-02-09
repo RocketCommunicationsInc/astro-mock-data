@@ -59,6 +59,7 @@ export const generateContact = (
     status: shuffle<Status>(dataOption.statuses),
     name: faker.datatype.number(),
     ground: shuffle(dataOption.grounds),
+    rev: faker.datatype.number({ min: 1001, max: 9999 }),
     satellite: 'USA-' + faker.random.alphaNumeric(5).toUpperCase(),
     equipment,
     state: shuffle(dataOption.states),

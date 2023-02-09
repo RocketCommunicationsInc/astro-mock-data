@@ -314,6 +314,7 @@ Returns a success message.
 | status           | Status                  |                     |
 | name             | number                  |                     |
 | ground           | ContactGround           |                     |
+| rev              | number                  |                     |
 | satellite        | string                  |                     |
 | equipment        | string                  |                     |
 | state            | ContactState            |                     |
