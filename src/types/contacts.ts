@@ -16,6 +16,7 @@ export type Contact = {
   status: Status;
   name: number;
   ground: string;
+  rev: number;
   satellite: string;
   equipment: string;
   state: string;
