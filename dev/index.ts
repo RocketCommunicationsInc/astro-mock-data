@@ -11,7 +11,7 @@ import {
   // onContactsChange,
 } from '../src';
 
-// const index = faker.datatype.number(99);
+// const index = faker.number.int(99);
 
 // const contacts = generateContacts(100, {
 //   // alertsPercentage: 5,
