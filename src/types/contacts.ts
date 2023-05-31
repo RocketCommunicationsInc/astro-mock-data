@@ -38,6 +38,7 @@ export type Contact = {
 };
 
 export type ModifyContactParams = {
+  id: string;
   ground?: string;
   satellite?: string;
   equipment?: string;

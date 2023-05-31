@@ -1,4 +1,4 @@
-import { Status } from './util';
+import { Status, Category } from './util';
 
 export type AlertOptions = {
   contactRefId?: string;
@@ -11,7 +11,7 @@ export type AlertOptions = {
 export type Alert = {
   id: string;
   status: Status;
-  category: string;
+  category: Category;
   message: string;
   longMessage: string;
   timestamp: number;
@@ -19,5 +19,5 @@ export type Alert = {
   new: boolean;
   expanded: boolean;
   acknowledged: boolean;
-  refId: string;
+  contactRefId: string;
 };

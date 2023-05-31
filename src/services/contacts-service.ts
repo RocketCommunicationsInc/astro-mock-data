@@ -74,14 +74,14 @@ export class ContactsService {
     return addedContact;
   }
 
-  public modifyContact(id: string, params: ModifyContactParams): string {
-    const index = this._findIndex(id);
+  public modifyContact(params: ModifyContactParams): string {
+    const index = this._findIndex(params.id);
     Object.entries(params).forEach(([key, value]) => {
       // @ts-expect-error key will be a contact property
       this._data[index][key] = value;
     });
     this._publish(this._data);
-    return `Successfully modified contact: ${id}`;
+    return `Successfully modified contact: ${params.id}`;
   }
 
   public deleteContact(id: string): string {

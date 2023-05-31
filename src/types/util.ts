@@ -35,3 +35,5 @@ export type AlertsPercentage =
   | 25
   | 34
   | 50;
+
+export type Category = 'hardware' | 'software' | 'spacecraft';
