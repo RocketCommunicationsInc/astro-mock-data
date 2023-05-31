@@ -1,7 +1,7 @@
 import { Status } from './util';
 
 export type AlertOptions = {
-  refId?: string;
+  contactRefId?: string;
   equipment?: string;
   start?: string | number | Date;
   end?: string | number | Date;
