@@ -1,6 +1,7 @@
 import { Status } from './util';
 
 export type MnemonicOptions = {
+  contactRefId?: string;
   thresholdMin?: number;
   thresholdMax?: number;
   deviation?: number;
@@ -8,11 +9,13 @@ export type MnemonicOptions = {
 };
 
 export type Mnemonic = {
+  id: string;
   mnemonicId: string;
   status: Status;
   unit: string;
-  threshold: number;
+  thresholdMax: number;
+  thresholdMin: number;
   currentValue: number;
   subsystem: string;
-  contactRefId: string;
+  contactRefId: string | undefined;
 };

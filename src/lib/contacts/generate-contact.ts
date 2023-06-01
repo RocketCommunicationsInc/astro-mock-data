@@ -79,6 +79,6 @@ export const generateContact = (
     alerts: range(alertsRange).map(() => {
       return generateAlert({ end, equipment, contactRefId: contactId, start });
     }),
-    mnemonics: generateMnemonics(contactId),
+    mnemonics: generateMnemonics(9, { contactRefId: contactId }),
   };
 };
