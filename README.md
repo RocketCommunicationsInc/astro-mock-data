@@ -393,14 +393,16 @@ Returns a success message.
 
 ### Mnemonic
 
-| Property     | Type                    | Description |
-| ------------ | ----------------------- | ----------- |
-| id           | string                  | uuid        |
-| mnemonicId   | string                  |             |
-| status       | Status                  |             |
-| unit         | string                  |             |
-| thresholdMax | number                  |             |
-| thresholdMin | number                  |             |
-| currentValue | number                  |             |
-| subsystem    | string &#124; undefined | uuid        |
-| contactRefId | string                  |             |
+| Property       | Type   | Description |
+| -------------- | ------ | ----------- |
+| id             | string | uuid        |
+| mnemonicId     | string |             |
+| status         | Status |             |
+| unit           | string |             |
+| thresholdMax   | number |             |
+| thresholdMin   | number |             |
+| currentValue   | number |             |
+| subsystem      | string |             |
+| childSubsystem | string |             |
+| measurement    | string |             |
+| contactRefId   | string |             |

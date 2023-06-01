@@ -11,6 +11,7 @@ type DataOptions = {
   statuses: Status[];
   steps: string[];
   subsystems: string[];
+  childSubSystems: string[];
   units: string[];
 };
 
@@ -57,8 +58,14 @@ const options: DataOptions = {
     'SARM',
     'Uplink',
   ],
-  subsystems: ['Attitude'],
-  units: ['Volts'],
+  subsystems: ['Attitude', 'Payload', 'Power', 'Propulsion', 'Thermal'],
+  childSubSystems: [
+    'Star Tracker',
+    'Earth Sensors',
+    'Reaction Wheels',
+    'Sun Sensors',
+  ],
+  units: ['Volts', 'Deg'],
 };
 
 export default options;

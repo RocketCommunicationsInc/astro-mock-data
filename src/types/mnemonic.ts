@@ -17,5 +17,7 @@ export type Mnemonic = {
   thresholdMin: number;
   currentValue: number;
   subsystem: string;
+  childSubSystem: string;
+  measurement: string;
   contactRefId: string | undefined;
 };
