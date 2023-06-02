@@ -184,7 +184,7 @@ Returns an array of alerts.
 | -------------------- | -------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------- |
 | length               | number                           | 40        | The total number of alerts to generate.                                                                          |
 | options              | {...}                            | {}        | If no options are set, the defaults are used as described below.                                                 |
-| options.contactRefId | string                           | undefined | A contact reference id. Will be an empty string if not provided.                                                 |
+| options.contactRefId | string                           | ''        | A contact reference id. Will be an empty string if not provided.                                                 |
 | options.equipment    | string                           | undefined | An equipment config string. Will be generated if not provided.                                                   |
 | options.createdRef   | string &#124; number &#124; Date | undefined | The date to reference when generating the alerts. If provided, this will override any start and end options set. |
 | options.start        | string &#124; number &#124; Date | undefined | The starting timestamp for the alert timestamp boundry.                                                          |
@@ -208,15 +208,15 @@ Returns an array of menmonics.
 
 #### Parameters
 
-| Name                 | Type   | Default   | Description                                                                                              |
-| -------------------- | ------ | --------- | -------------------------------------------------------------------------------------------------------- |
-| length               | number | 9         | The total number of alerts to generate.                                                                  |
-| options              | {...}  | {}        | If no options are set, the defaults are used as described below.                                         |
-| options.contactRefId | string | undefined | A contact reference id. Will be undefined if not provided.                                               |
-| options.thresholdMin | number | 0         | The minimum threshold for the mnemonic value.                                                            |
-| options.thresholdMax | number | 110       | The maximum threshold for the mnemonic value.                                                            |
-| options.deviation    | number | 20        | The amount the mnemonic value is allow to exceed the threshold maximum or subceed the threshold minimum. |
-| options.precision    | number | 0.1       | The number of decimal places the mnemonic value will include.                                            |
+| Name                 | Type   | Default | Description                                                                                              |
+| -------------------- | ------ | ------- | -------------------------------------------------------------------------------------------------------- |
+| length               | number | 9       | The total number of alerts to generate.                                                                  |
+| options              | {...}  | {}      | If no options are set, the defaults are used as described below.                                         |
+| options.contactRefId | string | ''      | A contact reference id. Will be an empty string if not provided.                                         |
+| options.thresholdMin | number | 0       | The minimum threshold for the mnemonic value.                                                            |
+| options.thresholdMax | number | 110     | The maximum threshold for the mnemonic value.                                                            |
+| options.deviation    | number | 20      | The amount the mnemonic value is allow to exceed the threshold maximum or subceed the threshold minimum. |
+| options.precision    | number | 0.1     | The number of decimal places the mnemonic value will include.                                            |
 
 ###### `function`
 
@@ -393,16 +393,16 @@ Returns a success message.
 
 ### Mnemonic
 
-| Property       | Type   | Description |
-| -------------- | ------ | ----------- |
-| id             | string | uuid        |
-| mnemonicId     | string |             |
-| status         | Status |             |
-| unit           | string |             |
-| thresholdMax   | number |             |
-| thresholdMin   | number |             |
-| currentValue   | number |             |
-| subsystem      | string |             |
-| childSubsystem | string |             |
-| measurement    | string |             |
-| contactRefId   | string |             |
+| Property       | Type   | Description    |
+| -------------- | ------ | -------------- |
+| id             | string | uuid           |
+| mnemonicId     | string |                |
+| status         | Status |                |
+| unit           | string |                |
+| thresholdMax   | number |                |
+| thresholdMin   | number |                |
+| currentValue   | number |                |
+| subsystem      | string |                |
+| childSubsystem | string |                |
+| measurement    | string |                |
+| contactRefId   | string | uuid &#124; '' |
