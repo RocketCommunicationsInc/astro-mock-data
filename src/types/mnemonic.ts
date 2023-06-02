@@ -19,5 +19,5 @@ export type Mnemonic = {
   subsystem: string;
   childSubSystem: string;
   measurement: string;
-  contactRefId: string | undefined;
+  contactRefId: string;
 };

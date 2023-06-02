@@ -22,7 +22,7 @@ export const generateAlert = (options?: AlertOptions): Alert => {
   return {
     id: faker.string.uuid(),
     contactRefId: options?.contactRefId || '',
-    category: shuffle(dataOption.categories) as Category,
+    category: shuffle<Category>(dataOption.categories),
     expanded: false,
     longMessage,
     message,
