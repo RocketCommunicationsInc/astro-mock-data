@@ -1,6 +1,6 @@
 # Astro UXDS Mock Data
 
-Generate "contacts" and "alerts" data for testing Astro Web Components and building demo applications.
+Generate "contacts", "alerts" and "mnemonics" data for testing Astro Web Components and building demo applications.
 
 ## Install
 
@@ -20,6 +20,7 @@ const contacts = generateContacts();
 const state = {
   contacts,
   alerts: contacts.flatMap(({ alerts }) => alerts),
+  mnemonics: contacts.flatMap(({ mnemonics }) => mnemonics),
 };
 
 console.log(state);
@@ -28,6 +29,8 @@ console.log(state);
 ## Contacts
 
 Contacts include alerts with a "contact ref" on the alert based on where in the array (the index) a contact is. Meaning not all contacts will have alerts, only a percentage of them will.
+
+All contacts will have mnemonics as an array property on the contact object.
 
 ```ts
 import { generateContacts } from '@astrouxds/mock-data';
@@ -61,6 +64,18 @@ import { generateAlerts } from '@astrouxds/mock-data';
 
 ```ts
 const alerts = generateAlerts(5); // returns 5 alerts
+```
+
+## Mnemonics
+
+If you just want mnemonics without any contact ref you can generate just an array of alerts.
+
+```ts
+import { generateMnemonics } from '@astrouxds/mock-data';
+```
+
+```ts
+const mnemonics = generateMnemonics(5); // returns 5 mnemonics
 ```
 
 ## Contacts Subscriber
@@ -165,15 +180,15 @@ Returns an array of alerts.
 
 #### Parameters
 
-| Name               | Type                             | Default   | Description                                                                                                      |
-| ------------------ | -------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------- |
-| length             | number                           | 40        | The total number of alerts to generate.                                                                          |
-| options            | {...}                            | {}        | If no options are set, the defaults are used as described below.                                                 |
-| options.refId      | string                           | undefined | A contact reference id. Will be an empty string if not provided.                                                 |
-| options.equipment  | string                           | undefined | An equipment config string. Will be generated if not provided.                                                   |
-| options.createdRef | string &#124; number &#124; Date | undefined | The date to reference when generating the alerts. If provided, this will override any start and end options set. |
-| options.start      | string &#124; number &#124; Date | undefined | The starting timestamp for the alert timestamp boundry.                                                          |
-| options.end        | string &#124; number &#124; Date | undefined | The ending timestamp for the alert timestamp boundry.                                                            |
+| Name                 | Type                             | Default   | Description                                                                                                      |
+| -------------------- | -------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------- |
+| length               | number                           | 40        | The total number of alerts to generate.                                                                          |
+| options              | {...}                            | {}        | If no options are set, the defaults are used as described below.                                                 |
+| options.contactRefId | string                           | ''        | A contact reference id. Will be an empty string if not provided.                                                 |
+| options.equipment    | string                           | undefined | An equipment config string. Will be generated if not provided.                                                   |
+| options.createdRef   | string &#124; number &#124; Date | undefined | The date to reference when generating the alerts. If provided, this will override any start and end options set. |
+| options.start        | string &#124; number &#124; Date | undefined | The starting timestamp for the alert timestamp boundry.                                                          |
+| options.end          | string &#124; number &#124; Date | undefined | The ending timestamp for the alert timestamp boundry.                                                            |
 
 ###### `function`
 
@@ -186,6 +201,34 @@ Returns a single alert.
 | Name    | Type  | Default | Description                                 |
 | ------- | ----- | ------- | ------------------------------------------- |
 | options | {...} | {}      | The same options from <b>generateAlerts</b> |
+
+### generateMnemonics
+
+Returns an array of menmonics.
+
+#### Parameters
+
+| Name                 | Type   | Default | Description                                                                                              |
+| -------------------- | ------ | ------- | -------------------------------------------------------------------------------------------------------- |
+| length               | number | 9       | The total number of alerts to generate.                                                                  |
+| options              | {...}  | {}      | If no options are set, the defaults are used as described below.                                         |
+| options.contactRefId | string | ''      | A contact reference id. Will be an empty string if not provided.                                         |
+| options.thresholdMin | number | 0       | The minimum threshold for the mnemonic value.                                                            |
+| options.thresholdMax | number | 110     | The maximum threshold for the mnemonic value.                                                            |
+| options.deviation    | number | 20      | The amount the mnemonic value is allow to exceed the threshold maximum or subceed the threshold minimum. |
+| options.precision    | number | 0.1     | The number of decimal places the mnemonic value will include.                                            |
+
+###### `function`
+
+### generateMnemonic
+
+Returns a single mnemonic.
+
+#### Parameters
+
+| Name    | Type  | Default | Description                                    |
+| ------- | ----- | ------- | ---------------------------------------------- |
+| options | {...} | {}      | The same options from <b>generateMnemonics</b> |
 
 ###### `function`
 
@@ -346,4 +389,20 @@ Returns a success message.
 | new          | boolean       |                |
 | expanded     | boolean       |                |
 | acknowledged | boolean       |                |
-| refId        | string        | uuid &#124; '' |
+| contactRefId | string        | uuid &#124; '' |
+
+### Mnemonic
+
+| Property       | Type   | Description    |
+| -------------- | ------ | -------------- |
+| id             | string | uuid           |
+| mnemonicId     | string |                |
+| status         | Status |                |
+| unit           | string |                |
+| thresholdMax   | number |                |
+| thresholdMin   | number |                |
+| currentValue   | number |                |
+| subsystem      | string |                |
+| childSubsystem | string |                |
+| measurement    | string |                |
+| contactRefId   | string | uuid &#124; '' |

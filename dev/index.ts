@@ -90,7 +90,8 @@ setTimeout(() => {
 setTimeout(() => {
   const id = contacts[between({ min: 0, max: contacts.length - 1 })].id;
   console.log('[Modified Contact]:', id);
-  contactsService.modifyContact(id, {
+  contactsService.modifyContact({
+    id,
     state: 'new state',
     detail: 'laksjd asjld laksjd alsjkd adjlaskdj',
   });

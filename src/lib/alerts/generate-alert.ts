@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 
 import dataOption from '../../data/options';
-import { Alert, AlertOptions, Status } from '../../types';
+import { Alert, AlertOptions, Status, Category } from '../../types';
 import { between, generateEquipment, shuffle } from '../../utils';
 
 export const generateAlert = (options?: AlertOptions): Alert => {
@@ -21,8 +21,8 @@ export const generateAlert = (options?: AlertOptions): Alert => {
 
   return {
     id: faker.string.uuid(),
-    refId: options?.refId || '',
-    category: shuffle(dataOption.categories),
+    contactRefId: options?.contactRefId || '',
+    category: shuffle<Category>(dataOption.categories),
     expanded: false,
     longMessage,
     message,

@@ -4,6 +4,7 @@ import dataOption from '../../data/options';
 import percentages from '../../data/percentages';
 import { Contact, ContactOptions, Status } from '../../types';
 import { generateAlert } from '../alerts/generate-alert';
+import { generateMnemonics } from '../mnemonics/generate-mnemonics';
 import {
   between,
   generateEquipment,
@@ -76,7 +77,8 @@ export const generateContact = (
     resolution: shuffle(dataOption.resolutions),
     resolutionStatus: shuffle(dataOption.resolutionStatuses),
     alerts: range(alertsRange).map(() => {
-      return generateAlert({ end, equipment, refId: contactId, start });
+      return generateAlert({ end, equipment, contactRefId: contactId, start });
     }),
+    mnemonics: generateMnemonics(9, { contactRefId: contactId }),
   };
 };

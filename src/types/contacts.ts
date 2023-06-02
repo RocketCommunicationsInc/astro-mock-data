@@ -1,4 +1,5 @@
 import { Alert } from './alert';
+import { Mnemonic } from './mnemonic';
 import { AlertsPercentage, Status, SubscribeOptions } from './util';
 
 export type ContactOptions = {
@@ -33,9 +34,11 @@ export type Contact = {
   resolution: string;
   resolutionStatus: string;
   alerts: Alert[];
+  mnemonics: Mnemonic[];
 };
 
 export type ModifyContactParams = {
+  id: string;
   ground?: string;
   satellite?: string;
   equipment?: string;

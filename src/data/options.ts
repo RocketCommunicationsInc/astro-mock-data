@@ -1,7 +1,7 @@
-import { Status } from '../types';
+import { Status, Category } from '../types';
 
 type DataOptions = {
-  categories: string[];
+  categories: Category[];
   errorTypes: string[];
   equipments: string[];
   grounds: string[];
@@ -10,6 +10,9 @@ type DataOptions = {
   states: string[];
   statuses: Status[];
   steps: string[];
+  subsystems: string[];
+  childSubSystems: string[];
+  units: string[];
 };
 
 const options: DataOptions = {
@@ -55,6 +58,14 @@ const options: DataOptions = {
     'SARM',
     'Uplink',
   ],
+  subsystems: ['Attitude', 'Payload', 'Power', 'Propulsion', 'Thermal'],
+  childSubSystems: [
+    'Star Tracker',
+    'Earth Sensors',
+    'Reaction Wheels',
+    'Sun Sensors',
+  ],
+  units: ['Volts', 'Deg'],
 };
 
 export default options;
