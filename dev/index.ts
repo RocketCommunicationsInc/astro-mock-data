@@ -70,9 +70,9 @@ const contactsService = new ContactsService({
   limit: 20,
 });
 
-let contacts: Contact[] = [];
+let contacts: Map<string, Contact> = new Map();
 const unsubscribe = contactsService.subscribe((data) => {
-  console.log(data.length);
+  console.log(data.size);
   contacts = data;
 });
 
@@ -82,13 +82,19 @@ setTimeout(() => {
 }, 1000 * 60 * 5);
 
 setTimeout(() => {
-  const id = contacts[between({ min: 0, max: contacts.length - 1 })].id;
+  const lastKey = Array.from(contacts.keys()).pop();
+  if (!lastKey) return;
+  const id = contacts.get(lastKey)?.id;
+  if (!id) return;
   console.log('[Removed Contact]:', id);
   contactsService.deleteContact(id);
 }, 1000 * 5);
 
 setTimeout(() => {
-  const id = contacts[between({ min: 0, max: contacts.length - 1 })].id;
+  const lastKey = Array.from(contacts.keys()).pop();
+  if (!lastKey) return;
+  const id = contacts.get(lastKey)?.id;
+  if (!id) return;
   console.log('[Modified Contact]:', id);
   contactsService.modifyContact({
     id,
