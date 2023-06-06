@@ -9,10 +9,12 @@ import type {
   Unsubscribe,
 } from '../types';
 
+type ContactsMap = Map<string, Contact>;
+type SubscribersSet = { [key: string]: Set<Function> };
 export class ContactsService {
-  private _data: Map<string, Contact> = new Map();
+  private _data: ContactsMap = new Map();
   private _eventName = 'contacts';
-  private _subscribers: { [key: string]: Set<Function> } = {};
+  private _subscribers: SubscribersSet = {};
   private _contactOptions: ContactOptions = {};
   private _subscribeOptions: SubscribeOptions = {};
 
@@ -31,11 +33,7 @@ export class ContactsService {
     };
   }
 
-  // private _findIndex(id: string): number {
-  //   return this._data.findIndex((contact) => contact.id === id);
-  // }
-
-  private _publish = (contacts: Map<string, Contact>) => {
+  private _publish = (contacts: ContactsMap) => {
     if (!(this._eventName in this._subscribers)) return;
 
     this._subscribers[this._eventName].forEach((callback) => {
@@ -44,7 +42,7 @@ export class ContactsService {
   };
 
   public subscribe = (
-    callback: (contacts: Map<string, Contact>) => void,
+    callback: (contacts: ContactsMap) => void,
   ): Unsubscribe => {
     if (!(this._eventName in this._subscribers)) {
       this._subscribers[this._eventName] = new Set<Function>();
@@ -69,7 +67,7 @@ export class ContactsService {
     };
   };
 
-  public getContacts = (): Map<string, Contact> => {
+  public getContacts = (): ContactsMap => {
     return this._data;
   };
 
