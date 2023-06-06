@@ -69,6 +69,10 @@ export class ContactsService {
     };
   };
 
+  public getContacts = (): Map<string, Contact> => {
+    return this._data;
+  };
+
   public addContact = (): Contact => {
     const index = this._data.size - 1;
     const addedContact = generateContact(index, this._contactOptions);
