@@ -7,6 +7,8 @@ import type {
   ModifyContactParams,
   SubscribeOptions,
   Unsubscribe,
+  Alert,
+  Mnemonic,
 } from '../types';
 
 type ContactsMap = Map<string, Contact>;
@@ -101,5 +103,35 @@ export class ContactsService {
     this._data.delete(id);
     this._publish(this._data);
     return `Successfully deleted contact: ${id}`;
+  };
+
+  public selectAlerts = () => {
+    const alerts = Array.from(this._data.values()).flatMap(
+      (contact) => contact.alerts,
+    );
+    const alertsById = alerts.reduce(
+      (alertsById: { [key: string]: Alert }, currentValue) => {
+        alertsById[currentValue.id] = currentValue;
+        return alertsById;
+      },
+      {},
+    );
+    const alertIds = alerts.map((alert) => alert.id);
+    return { alerts, alertsById, alertIds };
+  };
+
+  public selectMnemonics = () => {
+    const mnemonics = Array.from(this._data.values()).flatMap(
+      (contact) => contact.mnemonics,
+    );
+    const mnemonicsById = mnemonics.reduce(
+      (mnemonicsById: { [key: string]: Mnemonic }, currentValue) => {
+        mnemonicsById[currentValue.id] = currentValue;
+        return mnemonicsById;
+      },
+      {},
+    );
+    const mnemonicIds = mnemonics.map((mnemonic) => mnemonic.id);
+    return { mnemonics, mnemonicsById, mnemonicIds };
   };
 }
