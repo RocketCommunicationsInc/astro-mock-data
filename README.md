@@ -183,10 +183,12 @@ const contactsService = new ContactsService({
 });
 
 const App = () => {
-  const contacts = useSyncExternalStore(
+  const contactsData = useSyncExternalStore(
     contactService.subscribe,
     contactsService.getContacts,
   );
+
+  const { contacts } = contactService.selectContacts(contactsData);
 
   return (
     <ul>
