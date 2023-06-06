@@ -12,11 +12,9 @@ import type {
 } from '../types';
 
 type ContactsMap = Map<string, Contact>;
-type SubscribersSet = { [key: string]: Set<Function> };
 export class ContactsService {
   private _data: ContactsMap = new Map();
-  private _eventName = 'contacts';
-  private _subscribers: SubscribersSet = {};
+  private _subscribers: Set<Function> = new Set();
   private _contactOptions: ContactOptions = {};
   private _subscribeOptions: SubscribeOptions = {};
 
@@ -36,9 +34,7 @@ export class ContactsService {
   }
 
   private _publish = (contacts: ContactsMap) => {
-    if (!(this._eventName in this._subscribers)) return;
-
-    this._subscribers[this._eventName].forEach((callback) => {
+    this._subscribers.forEach((callback) => {
       callback(contacts);
     });
   };
@@ -46,11 +42,7 @@ export class ContactsService {
   public subscribe = (
     callback: (contacts: ContactsMap) => void,
   ): Unsubscribe => {
-    if (!(this._eventName in this._subscribers)) {
-      this._subscribers[this._eventName] = new Set<Function>();
-    }
-
-    this._subscribers[this._eventName].add(callback);
+    this._subscribers.add(callback);
     const initial = this._subscribeOptions.initial;
     const contactsArray = generateContacts(initial, this._contactOptions);
     contactsArray.forEach((contact) => this._data.set(contact.id, contact));
@@ -65,7 +57,7 @@ export class ContactsService {
 
     return () => {
       clearInterval(interval);
-      this._subscribers[this._eventName].delete(callback);
+      this._subscribers.delete(callback);
     };
   };
 
