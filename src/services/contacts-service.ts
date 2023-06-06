@@ -35,17 +35,17 @@ export class ContactsService {
   //   return this._data.findIndex((contact) => contact.id === id);
   // }
 
-  private _publish(contacts: Map<string, Contact>) {
+  private _publish = (contacts: Map<string, Contact>) => {
     if (!(this._eventName in this._subscribers)) return;
 
     this._subscribers[this._eventName].forEach((callback) => {
       callback(contacts);
     });
-  }
+  };
 
-  public subscribe(
+  public subscribe = (
     callback: (contacts: Map<string, Contact>) => void,
-  ): Unsubscribe {
+  ): Unsubscribe => {
     if (!(this._eventName in this._subscribers)) {
       this._subscribers[this._eventName] = new Set<Function>();
     }
@@ -67,17 +67,17 @@ export class ContactsService {
       clearInterval(interval);
       this._subscribers[this._eventName].delete(callback);
     };
-  }
+  };
 
-  public addContact(): Contact {
+  public addContact = (): Contact => {
     const index = this._data.size - 1;
     const addedContact = generateContact(index, this._contactOptions);
     this._data.set(addedContact.id, addedContact);
     this._publish(this._data);
     return addedContact;
-  }
+  };
 
-  public modifyContact(params: ModifyContactParams): string {
+  public modifyContact = (params: ModifyContactParams): string => {
     const currentContact = this._data.get(params.id);
     if (!currentContact) return `Contact with id ${params.id} does not exist`;
 
@@ -86,11 +86,11 @@ export class ContactsService {
 
     this._publish(this._data);
     return `Successfully modified contact: ${params.id}`;
-  }
+  };
 
-  public deleteContact(id: string): string {
+  public deleteContact = (id: string): string => {
     this._data.delete(id);
     this._publish(this._data);
     return `Successfully deleted contact: ${id}`;
-  }
+  };
 }
