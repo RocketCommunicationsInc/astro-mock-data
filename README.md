@@ -10,7 +10,7 @@ npm install @astrouxds/mock-data
 
 ## Getting Started
 
-The example below creates a state object with the generated contacts and maps the alerts connected to those contacts on an alerts property.
+The example below creates a state object with the generated contacts and maps the alerts and mnemonics connected to those contacts on their respective properties.
 
 ```ts
 import { generateContacts } from '@astrouxds/mock-data';
@@ -139,6 +139,68 @@ const App = () => {
 
 export default App;
 ```
+
+## Contacts Service
+
+Class based store for instaciating then subscribing to an auto-generate contacts state
+
+```ts
+import { ContactsService } from '@astrouxds/mock-data';
+```
+
+```ts
+// with manually set options
+const contactsService = new ContactsService({
+  initial: 10,
+  interval: 2,
+  limit: 20,
+});
+
+let contacts: Map<string, Contact> = new Map();
+const unsubscribe = contactsService.subscribe((data) => {
+  contacts = data;
+});
+```
+
+Use the unsubscribe function returned from contactsService.subscribe to unsubscribe
+
+```ts
+setTimeout(() => {
+  unsubscribe();
+}, 1000 * 60 * 5); // unsubscribe after 5 mins
+```
+
+## Contacts Service Example With React
+
+```ts
+import { useSyncExternalStore } from 'react';
+import { ContactsService } from '@astrouxds/mock-data';
+
+const contactsService = new ContactsService({
+  initial: 10,
+  interval: 2,
+  limit: 20,
+});
+
+const App = () => {
+  const contacts = useSyncExternalStore(
+    contactService.subscribe,
+    contactsService.getContacts,
+  );
+
+  return (
+    <ul>
+      {contacts.map(({ id, equipment }) => (
+        <li key={id}>{equipment}</li>
+      ))}
+    </ul>
+  );
+};
+
+export default App;
+```
+
+- The useSyncExternalStore hook takes two arguments (subscribe function, getSnapshot function) and one optional argument (getServerSnapshot function). The getServerSnapshot function is not supported and therefore SSR is not supported at this time.
 
 ## API
 
