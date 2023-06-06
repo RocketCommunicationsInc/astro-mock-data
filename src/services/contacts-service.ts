@@ -67,8 +67,15 @@ export class ContactsService {
     };
   };
 
-  public getContacts = (): ContactsMap => {
-    return this._data;
+  public getContacts = (): {
+    contacts: Contact[];
+    contactsById: { [key: string]: Contact };
+    contactIds: string[];
+  } => {
+    const contacts = Array.from(this._data.values());
+    const contactsById = Object.fromEntries(this._data);
+    const contactIds = Array.from(this._data.keys());
+    return { contacts, contactsById, contactIds };
   };
 
   public addContact = (): Contact => {
