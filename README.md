@@ -146,9 +146,7 @@ Class based store for instaciating then subscribing to an auto-generate contacts
 
 ```ts
 import { ContactsService } from '@astrouxds/mock-data';
-```
 
-```ts
 // with manually set options
 const contactsService = new ContactsService({
   initial: 10,
