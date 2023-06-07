@@ -104,7 +104,7 @@ setTimeout(() => {
 }, 1000 * 7);
 
 setTimeout(() => {
-  console.log(contactsService.getContacts());
+  console.log(contactsService.selectAlerts(contacts));
   contactsService.addContact();
   contactsService.addContact();
   contactsService.addContact();

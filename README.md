@@ -146,9 +146,7 @@ Class based store for instaciating then subscribing to an auto-generate contacts
 
 ```ts
 import { ContactsService } from '@astrouxds/mock-data';
-```
 
-```ts
 // with manually set options
 const contactsService = new ContactsService({
   initial: 10,
@@ -170,7 +168,7 @@ setTimeout(() => {
 }, 1000 * 60 * 5); // unsubscribe after 5 mins
 ```
 
-## Contacts Service Example With React
+<!-- ## Contacts Service Example With React
 
 ```ts
 import { useSyncExternalStore } from 'react';
@@ -183,10 +181,12 @@ const contactsService = new ContactsService({
 });
 
 const App = () => {
-  const contacts = useSyncExternalStore(
+  const contactsData = useSyncExternalStore(
     contactService.subscribe,
     contactsService.getContacts,
   );
+
+  const { contacts } = contactService.selectContacts(contactsData);
 
   return (
     <ul>
@@ -200,7 +200,7 @@ const App = () => {
 export default App;
 ```
 
-- The useSyncExternalStore hook takes two arguments (subscribe function, getSnapshot function) and one optional argument (getServerSnapshot function). The getServerSnapshot function is not supported and therefore SSR is not supported at this time.
+- The useSyncExternalStore hook takes two arguments (subscribe function, getSnapshot function) and one optional argument (getServerSnapshot function). The getServerSnapshot function is not supported and therefore SSR is not supported at this time. -->
 
 ## API
 

@@ -61,15 +61,8 @@ export class ContactsService {
     };
   };
 
-  public getContacts = (): {
-    contacts: Contact[];
-    contactsById: { [key: string]: Contact };
-    contactIds: string[];
-  } => {
-    const contacts = Array.from(this._data.values());
-    const contactsById = Object.fromEntries(this._data);
-    const contactIds = Array.from(this._data.keys());
-    return { contacts, contactsById, contactIds };
+  public getContacts = (): ContactsMap => {
+    return this._data;
   };
 
   public addContact = (): Contact => {
@@ -83,10 +76,8 @@ export class ContactsService {
   public modifyContact = (params: ModifyContactParams): string => {
     const currentContact = this._data.get(params.id);
     if (!currentContact) return `Contact with id ${params.id} does not exist`;
-
     const modifiedContact = { ...currentContact, ...params };
     this._data.set(params.id, modifiedContact);
-
     this._publish(this._data);
     return `Successfully modified contact: ${params.id}`;
   };
@@ -97,8 +88,15 @@ export class ContactsService {
     return `Successfully deleted contact: ${id}`;
   };
 
-  public selectAlerts = () => {
-    const alerts = Array.from(this._data.values()).flatMap(
+  public selectContacts = (contactsData: ContactsMap) => {
+    const contacts = Array.from(contactsData.values());
+    const contactsById = Object.fromEntries(contactsData);
+    const contactIds = Array.from(contactsData.keys());
+    return { contacts, contactsById, contactIds };
+  };
+
+  public selectAlerts = (contactsData: ContactsMap) => {
+    const alerts = Array.from(contactsData.values()).flatMap(
       (contact) => contact.alerts,
     );
     const alertsById = alerts.reduce(
@@ -112,8 +110,8 @@ export class ContactsService {
     return { alerts, alertsById, alertIds };
   };
 
-  public selectMnemonics = () => {
-    const mnemonics = Array.from(this._data.values()).flatMap(
+  public selectMnemonics = (contactsData: ContactsMap) => {
+    const mnemonics = Array.from(contactsData.values()).flatMap(
       (contact) => contact.mnemonics,
     );
     const mnemonicsById = mnemonics.reduce(
@@ -123,6 +121,7 @@ export class ContactsService {
       },
       {},
     );
+
     const mnemonicIds = mnemonics.map((mnemonic) => mnemonic.id);
     return { mnemonics, mnemonicsById, mnemonicIds };
   };
