@@ -170,7 +170,7 @@ setTimeout(() => {
 }, 1000 * 60 * 5); // unsubscribe after 5 mins
 ```
 
-## Contacts Service Example With React
+<!-- ## Contacts Service Example With React
 
 ```ts
 import { useSyncExternalStore } from 'react';
@@ -202,7 +202,7 @@ const App = () => {
 export default App;
 ```
 
-- The useSyncExternalStore hook takes two arguments (subscribe function, getSnapshot function) and one optional argument (getServerSnapshot function). The getServerSnapshot function is not supported and therefore SSR is not supported at this time.
+- The useSyncExternalStore hook takes two arguments (subscribe function, getSnapshot function) and one optional argument (getServerSnapshot function). The getServerSnapshot function is not supported and therefore SSR is not supported at this time. -->
 
 ## API
 
