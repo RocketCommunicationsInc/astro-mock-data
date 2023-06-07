@@ -76,10 +76,8 @@ export class ContactsService {
   public modifyContact = (params: ModifyContactParams): string => {
     const currentContact = this._data.get(params.id);
     if (!currentContact) return `Contact with id ${params.id} does not exist`;
-
     const modifiedContact = { ...currentContact, ...params };
     this._data.set(params.id, modifiedContact);
-
     this._publish(this._data);
     return `Successfully modified contact: ${params.id}`;
   };
@@ -123,6 +121,7 @@ export class ContactsService {
       },
       {},
     );
+
     const mnemonicIds = mnemonics.map((mnemonic) => mnemonic.id);
     return { mnemonics, mnemonicsById, mnemonicIds };
   };
