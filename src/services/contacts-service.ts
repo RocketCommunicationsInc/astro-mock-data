@@ -10,6 +10,8 @@ import type {
   Alert,
   Mnemonic,
   Store,
+  ModifyAlertParams,
+  ModifyMnemonicParams,
 } from '../types';
 
 const initialStore = {
@@ -108,6 +110,7 @@ export class ContactsService {
     if (!currentContact) return `Contact with id ${params.id} does not exist`;
     const modifiedContact = { ...currentContact, ...params };
     this._data.contacts.set(params.id, modifiedContact);
+    this._data = structuredClone(this._data);
     this._publish(this._data);
     return `Successfully modified contact: ${params.id}`;
   };
@@ -125,15 +128,9 @@ export class ContactsService {
 
   public deleteContact = (id: string): string => {
     this._data.contacts.delete(id);
+    this._data = structuredClone(this._data);
     this._publish(this._data);
     return `Successfully deleted contact: ${id}`;
-  };
-
-  public selectContacts = (contactsData: ContactsMap) => {
-    const contacts = Array.from(contactsData.values());
-    const contactsById = Object.fromEntries(contactsData);
-    const contactIds = Array.from(contactsData.keys());
-    return { contacts, contactsById, contactIds };
   };
 
   public transformData = (mappedData: any) => {
