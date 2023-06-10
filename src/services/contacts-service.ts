@@ -95,24 +95,36 @@ export class ContactsService {
   };
 
   public addContact = (): Contact => {
-    const index = this._data.size - 1;
+    const index = this._data.contacts.size - 1;
     const addedContact = generateContact(index, this._contactOptions);
-    this._data.set(addedContact.id, addedContact);
+    this._data.contacts.set(addedContact.id, addedContact);
+    this._data = structuredClone(this._data);
     this._publish(this._data);
     return addedContact;
   };
 
   public modifyContact = (params: ModifyContactParams): string => {
-    const currentContact = this._data.get(params.id);
+    const currentContact = this._data.contacts.get(params.id);
     if (!currentContact) return `Contact with id ${params.id} does not exist`;
     const modifiedContact = { ...currentContact, ...params };
-    this._data.set(params.id, modifiedContact);
+    this._data.contacts.set(params.id, modifiedContact);
     this._publish(this._data);
     return `Successfully modified contact: ${params.id}`;
   };
 
+  public modifyAllContacts = (
+    params: Omit<ModifyContactParams, 'id'>,
+  ): string => {
+    this._data.contacts.forEach((contact: Contact, contactId: string) => {
+      this._data.contacts.set(contactId, { ...contact, ...params });
+    });
+    this._data = structuredClone(this._data);
+    this._publish(this._data);
+    return `Successfully modified all contacts`;
+  };
+
   public deleteContact = (id: string): string => {
-    this._data.delete(id);
+    this._data.contacts.delete(id);
     this._publish(this._data);
     return `Successfully deleted contact: ${id}`;
   };
@@ -124,34 +136,10 @@ export class ContactsService {
     return { contacts, contactsById, contactIds };
   };
 
-  public selectAlerts = (contactsData: ContactsMap) => {
-    const alerts = Array.from(contactsData.values()).flatMap(
-      (contact) => contact.alerts,
-    );
-    const alertsById = alerts.reduce(
-      (alertsById: { [key: string]: Alert }, currentValue) => {
-        alertsById[currentValue.id] = currentValue;
-        return alertsById;
-      },
-      {},
-    );
-    const alertIds = alerts.map((alert) => alert.id);
-    return { alerts, alertsById, alertIds };
-  };
-
-  public selectMnemonics = (contactsData: ContactsMap) => {
-    const mnemonics = Array.from(contactsData.values()).flatMap(
-      (contact) => contact.mnemonics,
-    );
-    const mnemonicsById = mnemonics.reduce(
-      (mnemonicsById: { [key: string]: Mnemonic }, currentValue) => {
-        mnemonicsById[currentValue.id] = currentValue;
-        return mnemonicsById;
-      },
-      {},
-    );
-
-    const mnemonicIds = mnemonics.map((mnemonic) => mnemonic.id);
-    return { mnemonics, mnemonicsById, mnemonicIds };
+  public transformData = (mappedData: any) => {
+    const dataArray = Array.from(mappedData.values());
+    const dataById = Object.fromEntries(mappedData);
+    const dataIds = Array.from(mappedData.keys());
+    return { dataArray, dataById, dataIds };
   };
 }
