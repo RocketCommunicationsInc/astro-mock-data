@@ -49,4 +49,6 @@ export type ModifyContactParams = {
   endTimestamp?: number;
   resolution?: string;
   resolutionStatus?: string;
+  alerts?: Alert[];
+  mnemonics?: Mnemonic[];
 };

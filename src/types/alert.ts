@@ -21,3 +21,17 @@ export type Alert = {
   acknowledged: boolean;
   contactRefId: string;
 };
+
+export type ModifyAlertParams = {
+  id: string;
+  status?: Status;
+  category?: Category;
+  message?: string;
+  longMessage?: string;
+  timestamp?: number;
+  selected?: boolean;
+  new?: boolean;
+  expanded?: boolean;
+  acknowledged?: boolean;
+  contactRefId: string;
+};

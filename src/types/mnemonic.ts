@@ -21,3 +21,17 @@ export type Mnemonic = {
   measurement: string;
   contactRefId: string;
 };
+
+export type ModifyMnemonicParams = {
+  id: string;
+  mnemonicId?: string;
+  status?: Status;
+  unit?: string;
+  thresholdMax?: number;
+  thresholdMin?: number;
+  currentValue?: number;
+  subsystem?: string;
+  childSubSystem?: string;
+  measurement?: string;
+  contactRefId: string;
+};
