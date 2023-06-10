@@ -281,4 +281,13 @@ export class ContactsService {
     this._publish(this._data);
     return `Successfully deleted all alerts with ${property} of ${value}`;
   };
+
+  public allDataHasProp = (dataType: keyof Store, property: keyof any) =>
+    this.transformData(this._data[dataType]).dataArray.every(
+      (data: any) => data[property],
+    );
+  public anyDataHasProp = (dataType: keyof Store, property: keyof any) =>
+    this.transformData(this._data[dataType]).dataArray.some(
+      (data: any) => data[property],
+    );
 }
