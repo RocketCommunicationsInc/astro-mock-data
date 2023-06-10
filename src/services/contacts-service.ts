@@ -9,14 +9,23 @@ import type {
   Unsubscribe,
   Alert,
   Mnemonic,
+  Store,
 } from '../types';
+
+const initialStore = {
+  contacts: new Map(),
+  alerts: new Map(),
+  mnemonics: new Map(),
+};
 
 type ContactsMap = Map<string, Contact>;
 export class ContactsService {
-  private _data: ContactsMap = new Map();
+  private _data: Store = initialStore;
   private _subscribers: Set<Function> = new Set();
   private _contactOptions: ContactOptions = {};
   private _subscribeOptions: SubscribeOptions = {};
+  //TODO Fix interval clearing
+  private _intervalId: NodeJS.Timer = '' as any;
 
   constructor(options?: ContactsServiceOptions) {
     this._contactOptions = {
@@ -31,11 +40,40 @@ export class ContactsService {
       interval: options?.interval,
       limit: options?.limit,
     };
+
+    if (options?.initial) this._generateInitialData(options.initial);
+    if (options?.interval) this._generateIntervalData(options.interval);
   }
 
-  private _publish = (contacts: ContactsMap) => {
+  private _generateInitialData = (initial: number) => {
+    const contactsArray = generateContacts(initial, this._contactOptions);
+    contactsArray.forEach((contact) =>
+      this._data.contacts.set(contact.id, contact),
+    );
+  };
+
+  private _generateIntervalData = (interval: number = 5) => {
+    setInterval(() => {
+      this.addContact();
+    }, interval * 1000);
+    // TODO figure out how to store intervalID in class state
+  };
+
+  private _publish = (data: Store) => {
+    const alertsArray = Array.from(data.contacts.values()).flatMap(
+      (contact) => contact.alerts,
+    );
+    alertsArray.forEach((alert) => this._data.alerts.set(alert.id, alert));
+
+    const mnemonicsArray = Array.from(data.contacts.values()).flatMap(
+      (contact) => contact.mnemonics,
+    );
+    mnemonicsArray.forEach((mnemonic) =>
+      this._data.mnemonics.set(mnemonic.id, mnemonic),
+    );
+
     this._subscribers.forEach((callback) => {
-      callback(contacts);
+      callback(data);
     });
   };
 
@@ -43,25 +81,16 @@ export class ContactsService {
     callback: (contacts: ContactsMap) => void,
   ): Unsubscribe => {
     this._subscribers.add(callback);
-    const initial = this._subscribeOptions.initial;
-    const contactsArray = generateContacts(initial, this._contactOptions);
-    contactsArray.forEach((contact) => this._data.set(contact.id, contact));
     this._publish(this._data);
 
-    const limit = this._subscribeOptions.limit || 200;
-
-    const interval = setInterval(() => {
-      if (this._data.size >= limit) return;
-      this.addContact();
-    }, (this._subscribeOptions.interval || 5) * 1000);
-
     return () => {
-      clearInterval(interval);
       this._subscribers.delete(callback);
+      //TODO fix interval clearing
+      if (this._subscribers.size <= 1) clearInterval(this._intervalId);
     };
   };
 
-  public getContacts = (): ContactsMap => {
+  public getSnapshot = (): Store => {
     return this._data;
   };
 

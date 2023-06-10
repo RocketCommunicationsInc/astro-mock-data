@@ -2,6 +2,8 @@ import { Alert } from './alert';
 import { Mnemonic } from './mnemonic';
 import { AlertsPercentage, Status, SubscribeOptions } from './util';
 
+export type ContactsMap = Map<string, Contact>;
+
 export type ContactOptions = {
   alertsPercentage?: AlertsPercentage;
   secondAlertPercentage?: AlertsPercentage;

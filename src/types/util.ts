@@ -1,3 +1,5 @@
+import { ContactsMap, AlertsMap, MnemonicsMap } from './index';
+
 export type SubscribeOptions = {
   initial?: number;
   interval?: number;
@@ -37,3 +39,9 @@ export type AlertsPercentage =
   | 50;
 
 export type Category = 'hardware' | 'software' | 'spacecraft';
+
+export type Store = {
+  contacts: ContactsMap;
+  alerts: AlertsMap;
+  mnemonics: MnemonicsMap;
+};

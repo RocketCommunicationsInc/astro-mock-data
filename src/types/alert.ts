@@ -1,5 +1,7 @@
 import { Status, Category } from './util';
 
+export type AlertsMap = Map<string, Alert>;
+
 export type AlertOptions = {
   contactRefId?: string;
   equipment?: string;

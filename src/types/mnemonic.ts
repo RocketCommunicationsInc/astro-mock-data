@@ -1,5 +1,7 @@
 import { Status } from './util';
 
+export type MnemonicsMap = Map<string, Mnemonic>;
+
 export type MnemonicOptions = {
   contactRefId?: string;
   thresholdMin?: number;
