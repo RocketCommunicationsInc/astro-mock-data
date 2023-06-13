@@ -1,4 +1,4 @@
-import { Status } from './util';
+import { Status, DataType } from './util';
 
 export type MnemonicsMap = Map<string, Mnemonic>;
 
@@ -12,6 +12,7 @@ export type MnemonicOptions = {
 
 export type Mnemonic = {
   id: string;
+  type: DataType;
   mnemonicId: string;
   status: Status;
   unit: string;

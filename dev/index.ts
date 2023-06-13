@@ -66,20 +66,19 @@ import {
 
 const contactsService = new ContactsService({
   initial: 10,
-  interval: 2,
-  limit: 20,
+  interval: 1,
+  limit: 40,
 });
 
 let contacts: Map<string, Contact> = new Map();
 const unsubscribe = contactsService.subscribe((data) => {
-  console.log(data.size);
-  contacts = data;
+  contacts = data.contacts;
 });
 
 setTimeout(() => {
   console.log('unsubscribed...');
   unsubscribe();
-}, 1000 * 60 * 5);
+}, 1000 * 15);
 
 setTimeout(() => {
   const lastKey = Array.from(contacts.keys()).pop();
@@ -104,9 +103,11 @@ setTimeout(() => {
 }, 1000 * 7);
 
 setTimeout(() => {
-  console.log(contactsService.selectAlerts(contacts));
+  const usableData = contactsService.transformData(contacts);
+  // const any = contactsService.anyDataHasProp('contacts', 'sdfghsddshhdsg');
+
   contactsService.addContact();
   contactsService.addContact();
   contactsService.addContact();
   contactsService.addContact();
-}, 1000 * 15);
+}, 1000 * 10);

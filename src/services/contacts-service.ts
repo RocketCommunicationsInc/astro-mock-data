@@ -12,6 +12,10 @@ import type {
   Store,
   ModifyAlertParams,
   ModifyMnemonicParams,
+  ContactsMap,
+  AlertsMap,
+  MnemonicsMap,
+  GenericDataType,
 } from '../types';
 
 const initialStore = {
@@ -19,15 +23,12 @@ const initialStore = {
   alerts: new Map(),
   mnemonics: new Map(),
 };
-
-type ContactsMap = Map<string, Contact>;
 export class ContactsService {
   private _data: Store = initialStore;
   private _subscribers: Set<Function> = new Set();
   private _contactOptions: ContactOptions = {};
   private _subscribeOptions: SubscribeOptions = {};
-  //TODO Fix interval clearing
-  private _intervalId: NodeJS.Timer = '' as any;
+  private _intervalId?: NodeJS.Timer = undefined;
 
   constructor(options?: ContactsServiceOptions) {
     this._contactOptions = {
@@ -44,7 +45,10 @@ export class ContactsService {
     };
 
     if (options?.initial) this._generateInitialData(options.initial);
-    if (options?.interval) this._generateIntervalData(options.interval);
+    // sets interval for adding contacts
+    this._intervalId = options?.interval
+      ? setInterval(this.addContact.bind(this), 1000 * options.interval)
+      : undefined;
   }
 
   private _generateInitialData = (initial: number) => {
@@ -52,13 +56,6 @@ export class ContactsService {
     contactsArray.forEach((contact) =>
       this._data.contacts.set(contact.id, contact),
     );
-  };
-
-  private _generateIntervalData = (interval: number = 5) => {
-    setInterval(() => {
-      this.addContact();
-    }, interval * 1000);
-    // TODO figure out how to store intervalID in class state
   };
 
   private _publish = (data: Store) => {
@@ -79,16 +76,15 @@ export class ContactsService {
     });
   };
 
-  public subscribe = (
-    callback: (contacts: ContactsMap) => void,
-  ): Unsubscribe => {
+  public subscribe = (callback: (data: Store) => void): Unsubscribe => {
     this._subscribers.add(callback);
     this._publish(this._data);
 
     return () => {
       this._subscribers.delete(callback);
-      //TODO fix interval clearing
-      if (this._subscribers.size <= 1) clearInterval(this._intervalId);
+      if (this._subscribers.size <= 1) {
+        clearInterval(this._intervalId);
+      }
     };
   };
 
@@ -96,7 +92,17 @@ export class ContactsService {
     return this._data;
   };
 
+  public transformData = <GenericDataType>(
+    mappedData: Map<string, GenericDataType>,
+  ) => {
+    const dataArray = [...mappedData.values()];
+    const dataById = { ...mappedData.entries() };
+    const dataIds = [...mappedData.keys()];
+    return { dataArray, dataById, dataIds };
+  };
+
   public addContact = (): Contact => {
+    console.log('adding');
     const index = this._data.contacts.size - 1;
     const addedContact = generateContact(index, this._contactOptions);
     this._data.contacts.set(addedContact.id, addedContact);
@@ -131,13 +137,6 @@ export class ContactsService {
     this._data = structuredClone(this._data);
     this._publish(this._data);
     return `Successfully deleted contact: ${id}`;
-  };
-
-  public transformData = (mappedData: any) => {
-    const dataArray = Array.from(mappedData.values());
-    const dataById = Object.fromEntries(mappedData);
-    const dataIds = Array.from(mappedData.keys());
-    return { dataArray, dataById, dataIds };
   };
 
   public modifyAlert = (params: ModifyAlertParams): string => {
@@ -246,7 +245,10 @@ export class ContactsService {
     return `Successfully deleted alert: ${mnemonicId}`;
   };
 
-  public deleteAlertsWithProp = (property: keyof Alert, value: any): string => {
+  public deleteAlertsWithProp = (
+    property: keyof Alert,
+    value: Alert[keyof Alert],
+  ): string => {
     this._data.contacts.forEach((contact: Contact, contactId: string) => {
       const filteredAlerts = contact.alerts.filter(
         (alert) => alert[property] !== value,
@@ -263,7 +265,7 @@ export class ContactsService {
 
   public deleteMnemonicsWithProp = (
     property: keyof Mnemonic,
-    value: any,
+    value: Mnemonic[keyof Mnemonic],
   ): string => {
     this._data.contacts.forEach((contact: Contact, contactId: string) => {
       const filteredMnemonics = contact.mnemonics.filter(
@@ -279,12 +281,60 @@ export class ContactsService {
     return `Successfully deleted all alerts with ${property} of ${value}`;
   };
 
-  public allDataHasProp = (dataType: keyof Store, property: keyof any) =>
-    this.transformData(this._data[dataType]).dataArray.every(
-      (data: any) => data[property],
-    );
-  public anyDataHasProp = (dataType: keyof Store, property: keyof any) =>
-    this.transformData(this._data[dataType]).dataArray.some(
-      (data: any) => data[property],
-    );
+  public allDataHasProp = (
+    dataType: keyof Store,
+    property: keyof GetDataTypeFromKey<typeof dataType>,
+  ): boolean => {
+    const dataMap = this._data[dataType];
+    const { dataArray } =
+      this.transformData<GetDataTypeFromKey<typeof dataType>>(dataMap);
+    return dataArray.every((data: any) => data[property]);
+  };
+
+  public anyDataHasProp = (
+    dataType: keyof Store,
+    property: keyof GetDataTypeFromKey<typeof dataType>,
+  ): boolean => {
+    const dataMap = this._data[dataType];
+    const { dataArray } =
+      this.transformData<GetDataTypeFromKey<typeof dataType>>(dataMap);
+    return dataArray.some((data: any) => data[property]);
+  };
 }
+
+type GetDataTypeFromKey<T extends keyof Store> = T extends 'contact'
+  ? Contact
+  : T extends 'alert'
+  ? Alert
+  : T extends 'mnemonic'
+  ? Mnemonic
+  : never;
+
+type GetDataTypeFromMap<T extends ContactsMap | AlertsMap | MnemonicsMap> =
+  T extends ContactsMap
+    ? ContactsMap
+    : T extends AlertsMap
+    ? AlertsMap
+    : T extends MnemonicsMap
+    ? MnemonicsMap
+    : never;
+
+const isContact = (dataObj: Contact | Alert | Mnemonic): dataObj is Contact => {
+  return dataObj.type === 'contact';
+};
+
+const isContactsMap = (
+  dataMap: ContactsMap | AlertsMap | MnemonicsMap,
+): dataMap is ContactsMap => {
+  return [...dataMap.values()][0].type === 'contact';
+};
+const isAlertsMap = (
+  dataMap: ContactsMap | AlertsMap | MnemonicsMap,
+): dataMap is AlertsMap => {
+  return [...dataMap.values()][0].type === 'alert';
+};
+const isMnemonicsMap = (
+  dataMap: ContactsMap | AlertsMap | MnemonicsMap,
+): dataMap is MnemonicsMap => {
+  return [...dataMap.values()][0].type === 'mnemonic';
+};

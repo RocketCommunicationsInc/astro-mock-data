@@ -1,6 +1,6 @@
 import { Alert } from './alert';
 import { Mnemonic } from './mnemonic';
-import { AlertsPercentage, Status, SubscribeOptions } from './util';
+import { AlertsPercentage, Status, SubscribeOptions, DataType } from './util';
 
 export type ContactsMap = Map<string, Contact>;
 
@@ -16,6 +16,7 @@ export type OnContactChangeOptions = ContactOptions & SubscribeOptions;
 
 export type Contact = {
   id: string;
+  type: DataType;
   status: Status;
   name: number;
   ground: string;
@@ -35,6 +36,7 @@ export type Contact = {
   elevation: number;
   resolution: string;
   resolutionStatus: string;
+  selected: boolean;
   alerts: Alert[];
   mnemonics: Mnemonic[];
 };
@@ -51,6 +53,7 @@ export type ModifyContactParams = {
   endTimestamp?: number;
   resolution?: string;
   resolutionStatus?: string;
+  selected?: boolean;
   alerts?: Alert[];
   mnemonics?: Mnemonic[];
 };

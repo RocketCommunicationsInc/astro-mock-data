@@ -1,4 +1,11 @@
-import { ContactsMap, AlertsMap, MnemonicsMap } from './index';
+import {
+  ContactsMap,
+  AlertsMap,
+  MnemonicsMap,
+  Contact,
+  Alert,
+  Mnemonic,
+} from './index';
 
 export type SubscribeOptions = {
   initial?: number;
@@ -40,8 +47,13 @@ export type AlertsPercentage =
 
 export type Category = 'hardware' | 'software' | 'spacecraft';
 
+export type DataType = 'contact' | 'alert' | 'mnemonic';
+
 export type Store = {
   contacts: ContactsMap;
   alerts: AlertsMap;
   mnemonics: MnemonicsMap;
 };
+
+export type GenericDataType = Contact | Alert | Mnemonic;
+export type GenericDataMapType = ContactsMap | AlertsMap | MnemonicsMap;

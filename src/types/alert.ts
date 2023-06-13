@@ -1,4 +1,4 @@
-import { Status, Category } from './util';
+import { Status, Category, DataType } from './util';
 
 export type AlertsMap = Map<string, Alert>;
 
@@ -12,6 +12,7 @@ export type AlertOptions = {
 
 export type Alert = {
   id: string;
+  type: DataType;
   status: Status;
   category: Category;
   message: string;

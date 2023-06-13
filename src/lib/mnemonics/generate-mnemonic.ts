@@ -18,6 +18,7 @@ export const generateMnemonic = (options?: MnemonicOptions): Mnemonic => {
 
   return {
     id: faker.string.uuid(),
+    type: 'mnemonic',
     mnemonicId: faker.string.alpha({ length: 7, casing: 'upper' }),
     status: shuffle<Status>(dataOption.statuses),
     unit: unit,

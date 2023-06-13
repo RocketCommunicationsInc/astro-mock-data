@@ -21,6 +21,7 @@ export const generateAlert = (options?: AlertOptions): Alert => {
 
   return {
     id: faker.string.uuid(),
+    type: 'alert',
     contactRefId: options?.contactRefId || '',
     category: shuffle<Category>(dataOption.categories),
     expanded: false,
