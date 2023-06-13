@@ -2,6 +2,7 @@
 import { between } from '../src/utils';
 import {
   Contact,
+  Alert,
   ContactsService,
   // generateAlert,
   // generateAlerts,
@@ -103,8 +104,8 @@ setTimeout(() => {
 }, 1000 * 7);
 
 setTimeout(() => {
-  const usableData = contactsService.transformData(contacts);
-  // const any = contactsService.anyDataHasProp('contacts', 'sdfghsddshhdsg');
+  const { dataArray, dataById, dataIds } =
+    contactsService.transformData<Contact>(contacts);
 
   contactsService.addContact();
   contactsService.addContact();

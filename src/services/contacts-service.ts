@@ -12,10 +12,9 @@ import type {
   Store,
   ModifyAlertParams,
   ModifyMnemonicParams,
-  ContactsMap,
-  AlertsMap,
-  MnemonicsMap,
   GenericDataType,
+  GenericDataMapType,
+  GetDataTypeFromKey,
 } from '../types';
 
 const initialStore = {
@@ -92,12 +91,14 @@ export class ContactsService {
     return this._data;
   };
 
-  public transformData = <GenericDataType>(
-    mappedData: Map<string, GenericDataType>,
+  public transformData = <DataType = GenericDataType>(
+    mappedData: GenericDataMapType,
   ) => {
-    const dataArray = [...mappedData.values()];
-    const dataById = { ...mappedData.entries() };
-    const dataIds = [...mappedData.keys()];
+    const dataArray = [...mappedData.values()] as DataType[];
+    const dataById = Object.fromEntries(mappedData.entries()) as {
+      [key: string]: DataType;
+    };
+    const dataIds = [...mappedData.keys()] as string[];
     return { dataArray, dataById, dataIds };
   };
 
@@ -286,9 +287,8 @@ export class ContactsService {
     property: keyof GetDataTypeFromKey<typeof dataType>,
   ): boolean => {
     const dataMap = this._data[dataType];
-    const { dataArray } =
-      this.transformData<GetDataTypeFromKey<typeof dataType>>(dataMap);
-    return dataArray.every((data: any) => data[property]);
+    const { dataArray } = this.transformData(dataMap);
+    return dataArray.every((data) => data[property as keyof typeof data]);
   };
 
   public anyDataHasProp = (
@@ -296,45 +296,7 @@ export class ContactsService {
     property: keyof GetDataTypeFromKey<typeof dataType>,
   ): boolean => {
     const dataMap = this._data[dataType];
-    const { dataArray } =
-      this.transformData<GetDataTypeFromKey<typeof dataType>>(dataMap);
-    return dataArray.some((data: any) => data[property]);
+    const { dataArray } = this.transformData(dataMap);
+    return dataArray.some((data) => data[property as keyof typeof data]);
   };
 }
-
-type GetDataTypeFromKey<T extends keyof Store> = T extends 'contact'
-  ? Contact
-  : T extends 'alert'
-  ? Alert
-  : T extends 'mnemonic'
-  ? Mnemonic
-  : never;
-
-type GetDataTypeFromMap<T extends ContactsMap | AlertsMap | MnemonicsMap> =
-  T extends ContactsMap
-    ? ContactsMap
-    : T extends AlertsMap
-    ? AlertsMap
-    : T extends MnemonicsMap
-    ? MnemonicsMap
-    : never;
-
-const isContact = (dataObj: Contact | Alert | Mnemonic): dataObj is Contact => {
-  return dataObj.type === 'contact';
-};
-
-const isContactsMap = (
-  dataMap: ContactsMap | AlertsMap | MnemonicsMap,
-): dataMap is ContactsMap => {
-  return [...dataMap.values()][0].type === 'contact';
-};
-const isAlertsMap = (
-  dataMap: ContactsMap | AlertsMap | MnemonicsMap,
-): dataMap is AlertsMap => {
-  return [...dataMap.values()][0].type === 'alert';
-};
-const isMnemonicsMap = (
-  dataMap: ContactsMap | AlertsMap | MnemonicsMap,
-): dataMap is MnemonicsMap => {
-  return [...dataMap.values()][0].type === 'mnemonic';
-};

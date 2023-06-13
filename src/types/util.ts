@@ -57,3 +57,11 @@ export type Store = {
 
 export type GenericDataType = Contact | Alert | Mnemonic;
 export type GenericDataMapType = ContactsMap | AlertsMap | MnemonicsMap;
+
+export type GetDataTypeFromKey<T extends keyof Store> = T extends 'contact'
+  ? Contact
+  : T extends 'alert'
+  ? Alert
+  : T extends 'mnemonic'
+  ? Mnemonic
+  : never;
