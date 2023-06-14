@@ -3,7 +3,7 @@ import { between } from '../src/utils';
 import {
   Contact,
   Alert,
-  ContactsService,
+  TTC_GRM_Service,
   // generateAlert,
   // generateAlerts,
   // generateContact,
@@ -65,7 +65,7 @@ import {
 //   unsubscribe();
 // }, 1000 * 60);
 
-const contactsService = new ContactsService({
+const contactsService = new TTC_GRM_Service({
   initial: 10,
   interval: 1,
   limit: 40,
@@ -105,8 +105,9 @@ setTimeout(() => {
 
 setTimeout(() => {
   const { dataArray, dataById, dataIds } =
-    contactsService.transformData<Contact>(contacts);
+    contactsService.transformContactsData(contacts);
 
+  const x = dataArray[4];
   contactsService.addContact();
   contactsService.addContact();
   contactsService.addContact();

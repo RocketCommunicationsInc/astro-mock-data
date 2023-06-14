@@ -5,5 +5,6 @@ export * from './lib/contacts/generate-contacts';
 export * from './lib/mnemonics/generate-mnemonic';
 export * from './lib/mnemonics/generate-mnemonics';
 export * from './services/contacts-service';
+export * from './services/ttc-grm-service';
 export * from './subscribers/on-contacts-change';
 export * from './types';
