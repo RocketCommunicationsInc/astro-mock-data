@@ -141,24 +141,24 @@ export class TTC_GRM_Service {
     return newMnemonic;
   };
 
-  public modifyContact = (params: ModifyContactParams): string => {
+  public modifyContact = (params: ModifyContactParams): Contact => {
     const currentContact = this._data.contacts.get(params.id);
-    if (!currentContact) return `Contact with id ${params.id} does not exist`;
+    if (!currentContact) throw `Contact with id ${params.id} does not exist`;
     const modifiedContact = { ...currentContact, ...params };
     this._data.contacts.set(params.id, modifiedContact);
     this._data = structuredClone(this._data);
     this._publish(this._data);
-    return `Successfully modified contact: ${params.id}`;
+    return modifiedContact;
   };
-  public modifyAlert = (params: ModifyAlertParams): string => {
+  public modifyAlert = (params: ModifyAlertParams): Alert => {
     const currentContact = this._data.contacts.get(params.contactRefId);
     if (!currentContact)
-      return `Contact with id ${params.contactRefId} does not exist`;
+      throw `Contact with id ${params.contactRefId} does not exist`;
 
     const currentAlert = currentContact?.alerts.find(
       (alert) => alert.id === params.id,
     );
-    if (!currentAlert) return `Alert with id ${params.id} does not exist`;
+    if (!currentAlert) throw `Alert with id ${params.id} does not exist`;
 
     const alertIndex = currentContact?.alerts.indexOf(currentAlert);
     const modifiedAlert = { ...currentAlert, ...params };
@@ -170,17 +170,17 @@ export class TTC_GRM_Service {
 
     this.modifyContact({ id: currentContact.id, alerts: modifiedAlerts });
 
-    return `Successfully modified alert: ${params.id}`;
+    return modifiedAlert;
   };
-  public modifyMnemonic = (params: ModifyMnemonicParams): string => {
+  public modifyMnemonic = (params: ModifyMnemonicParams): Mnemonic => {
     const currentContact = this._data.contacts.get(params.contactRefId);
     if (!currentContact)
-      return `Contact with id ${params.contactRefId} does not exist`;
+      throw `Contact with id ${params.contactRefId} does not exist`;
 
     const currentMnemonic = currentContact?.mnemonics.find(
       (mnemonic) => mnemonic.id === params.id,
     );
-    if (!currentMnemonic) return `Alert with id ${params.id} does not exist`;
+    if (!currentMnemonic) throw `Alert with id ${params.id} does not exist`;
 
     const mnemonicIndex = currentContact?.mnemonics.indexOf(currentMnemonic);
     const modifiedMnemonic = { ...currentMnemonic, ...params };
@@ -192,7 +192,7 @@ export class TTC_GRM_Service {
 
     this.modifyContact({ id: currentContact.id, mnemonics: modifiedMnemonics });
 
-    return `Successfully modified alert: ${params.id}`;
+    return modifiedMnemonic;
   };
 
   public modifyAllContacts = (
@@ -232,7 +232,7 @@ export class TTC_GRM_Service {
     });
     this._data = structuredClone(this._data);
     this._publish(this._data);
-    return `Successfully modified all alerts`;
+    return `Successfully modified all mnemonics`;
   };
 
   public deleteContact = (id: string): string => {
@@ -266,7 +266,7 @@ export class TTC_GRM_Service {
 
     this.modifyContact({ id: currentContact.id, mnemonics: modifiedMnemonics });
 
-    return `Successfully deleted alert: ${mnemonicId}`;
+    return `Successfully deleted mnemonic: ${mnemonicId}`;
   };
 
   public deleteContactsWithProp = (
@@ -278,7 +278,7 @@ export class TTC_GRM_Service {
     });
     this._data = structuredClone(this._data);
     this._publish(this._data);
-    return `Successfully deleted all alerts with ${property} of ${value}`;
+    return `Successfully deleted all contacts with ${property} of ${value}`;
   };
   public deleteAlertsWithProp = (
     property: keyof Alert,
@@ -312,7 +312,7 @@ export class TTC_GRM_Service {
     });
     this._data = structuredClone(this._data);
     this._publish(this._data);
-    return `Successfully deleted all alerts with ${property} of ${value}`;
+    return `Successfully deleted all mnemonics with ${property} of ${value}`;
   };
 
   public allContactsHaveProp = (property: keyof Contact): boolean => {
