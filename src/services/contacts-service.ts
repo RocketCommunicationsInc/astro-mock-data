@@ -4,9 +4,9 @@ import type {
   Contact,
   ContactOptions,
   ContactsServiceOptions,
-  ModifyContactParams,
   SubscribeOptions,
   Unsubscribe,
+  UpdateContactParams,
 } from '../types';
 
 export class ContactsService {
@@ -63,6 +63,7 @@ export class ContactsService {
     return () => {
       clearInterval(interval);
       this._subscribers[this._eventName].splice(index, 1);
+      this._data = [];
     };
   }
 
@@ -74,7 +75,7 @@ export class ContactsService {
     return addedContact;
   }
 
-  public modifyContact(id: string, params: ModifyContactParams): string {
+  public updateContact(id: string, params: UpdateContactParams): string {
     const index = this._findIndex(id);
     Object.entries(params).forEach(([key, value]) => {
       // @ts-expect-error key will be a contact property
