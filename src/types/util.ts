@@ -1,4 +1,11 @@
-import { ContactsMap, AlertsMap, MnemonicsMap } from './index';
+import {
+  ContactsMap,
+  AlertsMap,
+  MnemonicsMap,
+  Contact,
+  Alert,
+  Mnemonic,
+} from './index';
 
 export type SubscribeOptions = {
   initial?: number;
@@ -46,4 +53,10 @@ export type Store = {
   contacts: ContactsMap;
   alerts: AlertsMap;
   mnemonics: MnemonicsMap;
+};
+
+export type StructuredData<T> = {
+  dataArray: T[];
+  dataById: { [key: string]: T };
+  dataIds: T[];
 };

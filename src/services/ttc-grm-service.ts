@@ -18,6 +18,7 @@ import type {
   MnemonicsMap,
   AlertOptions,
   MnemonicOptions,
+  StructuredData,
 } from '../types';
 
 const initialStore = {
@@ -30,6 +31,7 @@ export class TTC_GRM_Service {
   private _subscribers: Set<Function> = new Set();
   private _contactOptions: ContactOptions = {};
   private _intervalId?: NodeJS.Timer = undefined;
+  private _limit: number;
 
   constructor(options?: ContactsServiceOptions) {
     this._contactOptions = {
@@ -38,6 +40,8 @@ export class TTC_GRM_Service {
       daysRange: options?.daysRange,
       secondAlertPercentage: options?.secondAlertPercentage,
     };
+
+    this._limit = options?.limit || 200;
 
     if (options?.initial) this._generateInitialData(options.initial);
     // sets interval for adding contacts
@@ -53,26 +57,26 @@ export class TTC_GRM_Service {
     );
   };
 
-  private _publish = (data: Store) => {
-    const alertsArray = Array.from(data.contacts.values()).flatMap(
-      (contact) => contact.alerts,
-    );
-    alertsArray.forEach((alert) => this._data.alerts.set(alert.id, alert));
-
-    const mnemonicsArray = Array.from(data.contacts.values()).flatMap(
-      (contact) => contact.mnemonics,
-    );
+  private _publish = () => {
+    const allContacts = Array.from(this._data.contacts.values());
+    const newAlerts = new Map();
+    const newMnemonics = new Map();
+    const alertsArray = allContacts.flatMap((contact) => contact.alerts);
+    alertsArray.forEach((alert) => newAlerts.set(alert.id, alert));
+    const mnemonicsArray = allContacts.flatMap((contact) => contact.mnemonics);
     mnemonicsArray.forEach((mnemonic) =>
-      this._data.mnemonics.set(mnemonic.id, mnemonic),
+      newMnemonics.set(mnemonic.id, mnemonic),
     );
 
+    this._data.alerts = newAlerts;
+    this._data.mnemonics = newMnemonics;
     this._subscribers.forEach((callback) => {
-      callback(data);
+      callback(this._data);
     });
   };
   public subscribe = (callback: (data: Store) => void): Unsubscribe => {
     this._subscribers.add(callback);
-    this._publish(this._data);
+    this._publish();
 
     return () => {
       this._subscribers.delete(callback);
@@ -85,39 +89,43 @@ export class TTC_GRM_Service {
     return this._data;
   };
 
-  public transformContactsData = (mappedData: ContactsMap) => {
-    const dataArray = [...mappedData.values()];
-    const dataById = Object.fromEntries(mappedData.entries());
-    const dataIds = [...mappedData.keys()];
-    return { dataArray, dataById, dataIds };
-  };
-  public transformAlertsData = (mappedData: AlertsMap) => {
-    const dataArray = [...mappedData.values()];
-    const dataById = Object.fromEntries(mappedData.entries());
-    const dataIds = [...mappedData.keys()];
-    return { dataArray, dataById, dataIds };
-  };
-  public transformMnemonicsData = (mappedData: MnemonicsMap) => {
-    const dataArray = [...mappedData.values()];
-    const dataById = Object.fromEntries(mappedData.entries());
-    const dataIds = [...mappedData.keys()];
-    return { dataArray, dataById, dataIds };
-  };
+  public transformData(mappedData: ContactsMap): StructuredData<Contact>;
+  public transformData(mappedData: AlertsMap): StructuredData<Alert>;
+  public transformData(mappedData: MnemonicsMap): StructuredData<Mnemonic>;
+  public transformData(
+    mappedData: ContactsMap | AlertsMap | MnemonicsMap,
+  ): any {
+    const firstValue: Contact | Alert | Mnemonic = [...mappedData.values()][0];
+    if (firstValue.type === 'contact') {
+      return this._buildStructuredData<Contact>(mappedData);
+    } else if (firstValue.type === 'alert') {
+      return this._buildStructuredData<Alert>(mappedData);
+    } else if (firstValue.type === 'mnemonic') {
+      return this._buildStructuredData<Mnemonic>(mappedData);
+    }
+  }
 
   public addContact = (
     options: ContactOptions = this._contactOptions,
-  ): Contact => {
+  ): Contact | void => {
+    console.log('adding');
+    if (this._data.contacts.size >= this._limit) {
+      console.warn('contact limit reached');
+      clearInterval(this._intervalId);
+      return;
+    }
+
     const index = this._data.contacts.size - 1;
     const addedContact = generateContact(index, options);
     this._data.contacts.set(addedContact.id, addedContact);
-    this._data = structuredClone(this._data);
-    this._publish(this._data);
+    this._publish();
     return addedContact;
   };
   public addAlert = (contactId: string, options?: AlertOptions): Alert => {
     const newAlert = generateAlert({ contactRefId: contactId, ...options });
     const currentContact = this._data.contacts.get(contactId);
-    if (!currentContact) throw `Contact with id ${contactId} does not exist`;
+    if (!currentContact)
+      throw new Error(`Contact with id ${contactId} does not exist`);
     this.modifyContact({
       id: contactId,
       alerts: [...currentContact.alerts, newAlert],
@@ -133,7 +141,8 @@ export class TTC_GRM_Service {
       ...options,
     });
     const currentContact = this._data.contacts.get(contactId);
-    if (!currentContact) throw `Contact with id ${contactId} does not exist`;
+    if (!currentContact)
+      throw new Error(`Contact with id ${contactId} does not exist`);
     this.modifyContact({
       id: contactId,
       mnemonics: [...currentContact.mnemonics, newMnemonic],
@@ -143,33 +152,28 @@ export class TTC_GRM_Service {
 
   public modifyContact = (params: ModifyContactParams): Contact => {
     const currentContact = this._data.contacts.get(params.id);
-    if (!currentContact) throw `Contact with id ${params.id} does not exist`;
+    if (!currentContact)
+      throw new Error(`Contact with id ${params.id} does not exist`);
     const modifiedContact = { ...currentContact, ...params };
     this._data.contacts.set(params.id, modifiedContact);
-    this._data = structuredClone(this._data);
-    this._publish(this._data);
+    this._publish();
     return modifiedContact;
   };
   public modifyAlert = (params: ModifyAlertParams): Alert => {
     const currentContact = this._data.contacts.get(params.contactRefId);
     if (!currentContact)
-      throw `Contact with id ${params.contactRefId} does not exist`;
+      throw new Error(`Contact with id ${params.contactRefId} does not exist`);
 
     const currentAlert = currentContact?.alerts.find(
       (alert) => alert.id === params.id,
     );
-    if (!currentAlert) throw `Alert with id ${params.id} does not exist`;
+    if (!currentAlert)
+      throw new Error(`Alert with id ${params.id} does not exist`);
 
     const alertIndex = currentContact?.alerts.indexOf(currentAlert);
     const modifiedAlert = { ...currentAlert, ...params };
-    const modifiedAlerts = currentContact.alerts.splice(
-      alertIndex,
-      1,
-      modifiedAlert,
-    );
-
-    this.modifyContact({ id: currentContact.id, alerts: modifiedAlerts });
-
+    currentContact.alerts.splice(alertIndex, 1, modifiedAlert);
+    this._publish();
     return modifiedAlert;
   };
   public modifyMnemonic = (params: ModifyMnemonicParams): Mnemonic => {
@@ -180,7 +184,8 @@ export class TTC_GRM_Service {
     const currentMnemonic = currentContact?.mnemonics.find(
       (mnemonic) => mnemonic.id === params.id,
     );
-    if (!currentMnemonic) throw `Alert with id ${params.id} does not exist`;
+    if (!currentMnemonic)
+      throw new Error(`Alert with id ${params.id} does not exist`);
 
     const mnemonicIndex = currentContact?.mnemonics.indexOf(currentMnemonic);
     const modifiedMnemonic = { ...currentMnemonic, ...params };
@@ -201,8 +206,7 @@ export class TTC_GRM_Service {
     this._data.contacts.forEach((contact: Contact, contactId: string) => {
       this._data.contacts.set(contactId, { ...contact, ...params });
     });
-    this._data = structuredClone(this._data);
-    this._publish(this._data);
+    this._publish();
     return `Successfully modified all contacts`;
   };
   public modifyAllAlerts = (
@@ -214,8 +218,7 @@ export class TTC_GRM_Service {
       });
       this._data.contacts.set(contactId, { ...contact, alerts: mappedAlerts });
     });
-    this._data = structuredClone(this._data);
-    this._publish(this._data);
+    this._publish();
     return `Successfully modified all alerts`;
   };
   public modifyAllMnemonics = (
@@ -230,15 +233,13 @@ export class TTC_GRM_Service {
         mnemonics: mappedMnemonics,
       });
     });
-    this._data = structuredClone(this._data);
-    this._publish(this._data);
+    this._publish();
     return `Successfully modified all mnemonics`;
   };
 
   public deleteContact = (id: string): string => {
     this._data.contacts.delete(id);
-    this._data = structuredClone(this._data);
-    this._publish(this._data);
+    this._publish();
     return `Successfully deleted contact: ${id}`;
   };
   public deleteAlert = (contactRefId: string, alertId: string): string => {
@@ -276,25 +277,24 @@ export class TTC_GRM_Service {
     this._data.contacts.forEach((contact: Contact, contactId: string) => {
       if (contact[property] === value) this._data.contacts.delete(contactId);
     });
-    this._data = structuredClone(this._data);
-    this._publish(this._data);
+    this._publish();
     return `Successfully deleted all contacts with ${property} of ${value}`;
   };
   public deleteAlertsWithProp = (
     property: keyof Alert,
     value: Alert[keyof Alert],
   ): string => {
-    this._data.contacts.forEach((contact: Contact, contactId: string) => {
+    const contacts = this._data.contacts;
+    contacts.forEach((contact: Contact, contactId: string) => {
       const filteredAlerts = contact.alerts.filter(
         (alert) => alert[property] !== value,
       );
-      this._data.contacts.set(contactId, {
+      contacts.set(contactId, {
         ...contact,
         alerts: filteredAlerts,
       });
     });
-    this._data = structuredClone(this._data);
-    this._publish(this._data);
+    this._publish();
     return `Successfully deleted all alerts with ${property} of ${value}`;
   };
   public deleteMnemonicsWithProp = (
@@ -310,34 +310,44 @@ export class TTC_GRM_Service {
         mnemonics: filteredMnemonics,
       });
     });
-    this._data = structuredClone(this._data);
-    this._publish(this._data);
+    this._publish();
     return `Successfully deleted all mnemonics with ${property} of ${value}`;
   };
 
   public allContactsHaveProp = (property: keyof Contact): boolean => {
-    const { dataArray } = this.transformContactsData(this._data.contacts);
+    const { dataArray } = this.transformData(this._data.contacts);
     return dataArray.every((data) => data[property]);
   };
   public allAlertsHaveProp = (property: keyof Alert): boolean => {
-    const { dataArray } = this.transformAlertsData(this._data.alerts);
+    const { dataArray } = this.transformData(this._data.alerts);
     return dataArray.every((data) => data[property]);
   };
   public allMnemonicsHaveProp = (property: keyof Mnemonic): boolean => {
-    const { dataArray } = this.transformMnemonicsData(this._data.mnemonics);
+    const { dataArray } = this.transformData(this._data.mnemonics);
     return dataArray.every((data) => data[property]);
   };
 
   public anyContactsHaveProp = (property: keyof Contact): boolean => {
-    const { dataArray } = this.transformContactsData(this._data.contacts);
+    const { dataArray } = this.transformData(this._data.contacts);
     return dataArray.some((data) => data[property]);
   };
   public anyAlertsHaveProp = (property: keyof Alert): boolean => {
-    const { dataArray } = this.transformAlertsData(this._data.alerts);
+    const { dataArray } = this.transformData(this._data.alerts);
     return dataArray.some((data) => data[property]);
   };
   public anyMnemonicsHaveProp = (property: keyof Mnemonic): boolean => {
-    const { dataArray } = this.transformMnemonicsData(this._data.mnemonics);
+    const { dataArray } = this.transformData(this._data.mnemonics);
     return dataArray.some((data) => data[property]);
+  };
+
+  private _buildStructuredData = <T>(
+    mappedData: ContactsMap | AlertsMap | MnemonicsMap,
+  ) => {
+    const dataArray = [...mappedData.values()] as T[];
+    const dataById = Object.fromEntries(mappedData.entries()) as {
+      [key: string]: T;
+    };
+    const dataIds = [...mappedData.keys()] as string[];
+    return { dataArray, dataById, dataIds };
   };
 }
