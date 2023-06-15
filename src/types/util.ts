@@ -1,11 +1,4 @@
-import {
-  ContactsMap,
-  AlertsMap,
-  MnemonicsMap,
-  Contact,
-  Alert,
-  Mnemonic,
-} from './index';
+import { ContactsMap, AlertsMap, MnemonicsMap } from './index';
 
 export type SubscribeOptions = {
   initial?: number;
