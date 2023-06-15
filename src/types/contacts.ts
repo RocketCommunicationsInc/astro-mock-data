@@ -57,3 +57,16 @@ export type ModifyContactParams = {
   alerts?: Alert[];
   mnemonics?: Mnemonic[];
 };
+
+export type UpdateContactParams = {
+  ground?: string;
+  satellite?: string;
+  equipment?: string;
+  state?: string;
+  step?: string;
+  detail?: string;
+  beginTimestamp?: number;
+  endTimestamp?: number;
+  resolution?: string;
+  resolutionStatus?: string;
+};
