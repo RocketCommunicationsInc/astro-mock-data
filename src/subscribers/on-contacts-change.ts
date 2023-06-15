@@ -7,7 +7,7 @@ import type {
   Unsubscribe,
 } from '../types';
 
-const contacts: Contact[] = [];
+let contacts: Contact[] = [];
 const eventName = 'contacts';
 const subscribers: { [key: string]: Function[] } = {};
 
@@ -49,5 +49,6 @@ export const onContactsChange = (
   return () => {
     clearInterval(interval);
     subscribers[eventName].splice(index, 1);
+    contacts = [];
   };
 };
