@@ -154,7 +154,7 @@ const contactsService = new ContactsService({
   limit: 20,
 });
 
-let contacts: Map<string, Contact> = new Map();
+let contacts: Contact[] = [];
 const unsubscribe = contactsService.subscribe((data) => {
   contacts = data;
 });
@@ -318,7 +318,7 @@ Returns an unsubscribe function.
 
 ### ContactsService
 
-Generates initial contacts, publishes a new contact every x amount of seconds, and has methods to add, modify, and delete a contact.
+Generates initial contacts, publishes a new contact every x amount of seconds, and has methods to add, update, and delete a contact.
 
 Returns an instance a ContactsService.
 
@@ -361,9 +361,9 @@ Returns the added contact.
 | ---- | ---- | ------- | ----------- |
 |      |      |         |             |
 
-`modifyContact`
+`updateContact`
 
-Modifies the specified contact.
+Updates the specified contact.
 
 Returns a success message.
 
@@ -372,7 +372,7 @@ Returns a success message.
 | Name                    | Type                    | Default   | Description                      |
 | ----------------------- | ----------------------- | --------- | -------------------------------- |
 | id                      | uuid                    | required  | The id of the contact to modify. |
-| params                  | ModifyContactParams     | {}        | An optional params object.       |
+| params                  | UpdateContactParams     | {}        | An optional params object.       |
 | params.ground           | ContactGround           | undefined | Optional property to modify.     |
 | params.satellite        | string                  | undefined | Optional property to modify.     |
 | params.equipment        | string                  | undefined | Optional property to modify.     |
@@ -409,33 +409,36 @@ Returns a success message.
 | ContactStep             | 'AOS' &#124; 'Command' &#124; 'Configure Operation' &#124; 'Critical Health' &#124; 'DCC' &#124; 'Downlink' &#124; 'Lock' &#124; 'LOS' &#124; 'SARM'&#124; 'Uplink' |
 | ContactResolution       | 'complete' &#124; 'failed' &#124; 'pass' &#124; 'prepass' &#124; 'scheduled'                                                                                        |
 | ContactResolutionStatus | 'normal' &#124; 'critical' &#124; 'off' &#124; 'standby'                                                                                                            |
+| DataType                | 'contact' &#124; 'alert' &#124; 'mnemonic'                                                                                                                          |
 | Status                  | 'caution' &#124; 'critical' &#124; 'normal' &#124; 'off' &#124; 'serious' &#124; 'standby'                                                                          |
 
 ### Contact
 
-| Property         | Type                    | Description         |
-| ---------------- | ----------------------- | ------------------- |
-| id               | string                  | uuid                |
-| status           | Status                  |                     |
-| name             | number                  |                     |
-| ground           | ContactGround           |                     |
-| rev              | number                  |                     |
-| satellite        | string                  |                     |
-| equipment        | string                  |                     |
-| state            | ContactState            |                     |
-| step             | ContactStep             |                     |
-| detail           | string                  |                     |
-| beginTimestamp   | number                  |                     |
-| endTimestamp     | number                  |                     |
-| aos              | number                  |                     |
-| los              | number                  |                     |
-| latitude         | number                  |                     |
-| longitude        | number                  |                     |
-| azimuth          | number                  |                     |
-| elevation        | number                  |                     |
-| resolution       | ContactResolution       |                     |
-| resolutionStatus | ContactResolutionStatus |                     |
-| alerts           | Alert[]                 | An array of alerts. |
+| Property         | Type                    | Description            |
+| ---------------- | ----------------------- | ---------------------- |
+| id               | string                  | uuid                   |
+| type             | DataType                |                        |
+| status           | Status                  |                        |
+| name             | number                  |                        |
+| ground           | ContactGround           |                        |
+| rev              | number                  |                        |
+| satellite        | string                  |                        |
+| equipment        | string                  |                        |
+| state            | ContactState            |                        |
+| step             | ContactStep             |                        |
+| detail           | string                  |                        |
+| beginTimestamp   | number                  |                        |
+| endTimestamp     | number                  |                        |
+| aos              | number                  |                        |
+| los              | number                  |                        |
+| latitude         | number                  |                        |
+| longitude        | number                  |                        |
+| azimuth          | number                  |                        |
+| elevation        | number                  |                        |
+| resolution       | ContactResolution       |                        |
+| resolutionStatus | ContactResolutionStatus |                        |
+| alerts           | Alert[]                 | An array of alerts.    |
+| mnemonics        | Mnemonic[]              | An array of mnemonics. |
 
 ### Alert
 

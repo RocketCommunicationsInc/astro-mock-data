@@ -1,5 +1,6 @@
 import { Status, Category } from '../types';
 
+// TODO: create types for all data options and add to readme schema
 type DataOptions = {
   categories: Category[];
   errorTypes: string[];

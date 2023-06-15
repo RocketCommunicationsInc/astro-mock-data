@@ -4,17 +4,15 @@ import type {
   Contact,
   ContactOptions,
   ContactsServiceOptions,
-  ModifyContactParams,
   SubscribeOptions,
   Unsubscribe,
-  Alert,
-  Mnemonic,
+  UpdateContactParams,
 } from '../types';
 
-type ContactsMap = Map<string, Contact>;
 export class ContactsService {
-  private _data: ContactsMap = new Map();
-  private _subscribers: Set<Function> = new Set();
+  private _data: Contact[] = [];
+  private _eventName = 'contacts';
+  private _subscribers: { [key: string]: Function[] } = {};
   private _contactOptions: ContactOptions = {};
   private _subscribeOptions: SubscribeOptions = {};
 
@@ -33,96 +31,64 @@ export class ContactsService {
     };
   }
 
-  private _publish = (contacts: ContactsMap) => {
-    this._subscribers.forEach((callback) => {
+  private _findIndex(id: string): number {
+    return this._data.findIndex((contact) => contact.id === id);
+  }
+
+  private _publish(contacts: Contact[]) {
+    if (!Array.isArray(this._subscribers[this._eventName])) return;
+
+    this._subscribers[this._eventName].forEach((callback) => {
       callback(contacts);
     });
-  };
+  }
 
-  public subscribe = (
-    callback: (contacts: ContactsMap) => void,
-  ): Unsubscribe => {
-    this._subscribers.add(callback);
+  public subscribe(callback: (contacts: Contact[]) => void): Unsubscribe {
+    if (!Array.isArray(this._subscribers[this._eventName])) {
+      this._subscribers[this._eventName] = [];
+    }
+
+    this._subscribers[this._eventName].push(callback);
     const initial = this._subscribeOptions.initial;
-    const contactsArray = generateContacts(initial, this._contactOptions);
-    contactsArray.forEach((contact) => this._data.set(contact.id, contact));
+    this._data = generateContacts(initial, this._contactOptions);
     this._publish(this._data);
 
     const limit = this._subscribeOptions.limit || 200;
-
+    const index = this._subscribers[this._eventName].length - 1;
     const interval = setInterval(() => {
-      if (this._data.size >= limit) return;
+      if (this._data.length >= limit) return;
       this.addContact();
     }, (this._subscribeOptions.interval || 5) * 1000);
 
     return () => {
       clearInterval(interval);
-      this._subscribers.delete(callback);
+      this._subscribers[this._eventName].splice(index, 1);
+      this._data = [];
     };
-  };
+  }
 
-  public getContacts = (): ContactsMap => {
-    return this._data;
-  };
-
-  public addContact = (): Contact => {
-    const index = this._data.size - 1;
+  public addContact(): Contact {
+    const index = this._data.length - 1;
     const addedContact = generateContact(index, this._contactOptions);
-    this._data.set(addedContact.id, addedContact);
+    this._data = [...this._data, addedContact];
     this._publish(this._data);
     return addedContact;
-  };
+  }
 
-  public modifyContact = (params: ModifyContactParams): string => {
-    const currentContact = this._data.get(params.id);
-    if (!currentContact) return `Contact with id ${params.id} does not exist`;
-    const modifiedContact = { ...currentContact, ...params };
-    this._data.set(params.id, modifiedContact);
+  public updateContact(id: string, params: UpdateContactParams): string {
+    const index = this._findIndex(id);
+    Object.entries(params).forEach(([key, value]) => {
+      // @ts-expect-error key will be a contact property
+      this._data[index][key] = value;
+    });
     this._publish(this._data);
-    return `Successfully modified contact: ${params.id}`;
-  };
+    return `Successfully modified contact: ${id}`;
+  }
 
-  public deleteContact = (id: string): string => {
-    this._data.delete(id);
+  public deleteContact(id: string): string {
+    const index = this._findIndex(id);
+    this._data.splice(index, 1);
     this._publish(this._data);
     return `Successfully deleted contact: ${id}`;
-  };
-
-  public selectContacts = (contactsData: ContactsMap) => {
-    const contacts = Array.from(contactsData.values());
-    const contactsById = Object.fromEntries(contactsData);
-    const contactIds = Array.from(contactsData.keys());
-    return { contacts, contactsById, contactIds };
-  };
-
-  public selectAlerts = (contactsData: ContactsMap) => {
-    const alerts = Array.from(contactsData.values()).flatMap(
-      (contact) => contact.alerts,
-    );
-    const alertsById = alerts.reduce(
-      (alertsById: { [key: string]: Alert }, currentValue) => {
-        alertsById[currentValue.id] = currentValue;
-        return alertsById;
-      },
-      {},
-    );
-    const alertIds = alerts.map((alert) => alert.id);
-    return { alerts, alertsById, alertIds };
-  };
-
-  public selectMnemonics = (contactsData: ContactsMap) => {
-    const mnemonics = Array.from(contactsData.values()).flatMap(
-      (contact) => contact.mnemonics,
-    );
-    const mnemonicsById = mnemonics.reduce(
-      (mnemonicsById: { [key: string]: Mnemonic }, currentValue) => {
-        mnemonicsById[currentValue.id] = currentValue;
-        return mnemonicsById;
-      },
-      {},
-    );
-
-    const mnemonicIds = mnemonics.map((mnemonic) => mnemonic.id);
-    return { mnemonics, mnemonicsById, mnemonicIds };
-  };
+  }
 }

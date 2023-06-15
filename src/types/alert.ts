@@ -1,4 +1,6 @@
-import { Status, Category } from './util';
+import { Status, Category, DataType } from './util';
+
+export type AlertsMap = Map<string, Alert>;
 
 export type AlertOptions = {
   contactRefId?: string;
@@ -10,6 +12,7 @@ export type AlertOptions = {
 
 export type Alert = {
   id: string;
+  type: DataType;
   status: Status;
   category: Category;
   message: string;
@@ -19,5 +22,19 @@ export type Alert = {
   new: boolean;
   expanded: boolean;
   acknowledged: boolean;
+  contactRefId: string;
+};
+
+export type ModifyAlertParams = {
+  id: string;
+  status?: Status;
+  category?: Category;
+  message?: string;
+  longMessage?: string;
+  timestamp?: number;
+  selected?: boolean;
+  new?: boolean;
+  expanded?: boolean;
+  acknowledged?: boolean;
   contactRefId: string;
 };

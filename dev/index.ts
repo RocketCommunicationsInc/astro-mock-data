@@ -3,6 +3,7 @@ import { between } from '../src/utils';
 import {
   Contact,
   ContactsService,
+  TTC_GRM_Service,
   // generateAlert,
   // generateAlerts,
   // generateContact,
@@ -64,39 +65,38 @@ import {
 //   unsubscribe();
 // }, 1000 * 60);
 
-const contactsService = new ContactsService({
+const ttcGrmService = new TTC_GRM_Service({
   initial: 10,
-  interval: 2,
-  limit: 20,
+  interval: 1,
+  limit: 40,
 });
 
-let contacts: Map<string, Contact> = new Map();
-const unsubscribe = contactsService.subscribe((data) => {
-  console.log(data.size);
-  contacts = data;
+let ttcGrmcontacts: Map<string, Contact> = new Map();
+const ttcGrmUnsubscribe = ttcGrmService.subscribe((data) => {
+  ttcGrmcontacts = data.contacts;
 });
 
 setTimeout(() => {
-  console.log('unsubscribed...');
-  unsubscribe();
-}, 1000 * 60 * 5);
+  console.log('unsubscribed from ttc grm service...');
+  ttcGrmUnsubscribe();
+}, 1000 * 15);
 
 setTimeout(() => {
-  const lastKey = Array.from(contacts.keys()).pop();
+  const lastKey = Array.from(ttcGrmcontacts.keys()).pop();
   if (!lastKey) return;
-  const id = contacts.get(lastKey)?.id;
+  const id = ttcGrmcontacts.get(lastKey)?.id;
   if (!id) return;
   console.log('[Removed Contact]:', id);
-  contactsService.deleteContact(id);
+  ttcGrmService.deleteContact(id);
 }, 1000 * 5);
 
 setTimeout(() => {
-  const lastKey = Array.from(contacts.keys()).pop();
+  const lastKey = Array.from(ttcGrmcontacts.keys()).pop();
   if (!lastKey) return;
-  const id = contacts.get(lastKey)?.id;
+  const id = ttcGrmcontacts.get(lastKey)?.id;
   if (!id) return;
   console.log('[Modified Contact]:', id);
-  contactsService.modifyContact({
+  ttcGrmService.modifyContact({
     id,
     state: 'new state',
     detail: 'laksjd asjld laksjd alsjkd adjlaskdj',
@@ -104,7 +104,49 @@ setTimeout(() => {
 }, 1000 * 7);
 
 setTimeout(() => {
-  console.log(contactsService.selectAlerts(contacts));
+  const { dataArray, dataById, dataIds } =
+    ttcGrmService.transformContactsData(ttcGrmcontacts);
+
+  const x = dataArray[4];
+  ttcGrmService.addContact();
+  ttcGrmService.addContact();
+  ttcGrmService.addContact();
+  ttcGrmService.addContact();
+}, 1000 * 10);
+
+const contactsService = new ContactsService({
+  initial: 10,
+  interval: 2,
+  limit: 20,
+});
+
+let contacts: Contact[] = [];
+const unsubscribe = contactsService.subscribe((data) => {
+  console.log(data.length);
+  contacts = data;
+});
+
+setTimeout(() => {
+  console.log('unsubscribed from contact service...');
+  unsubscribe();
+}, 1000 * 20);
+
+setTimeout(() => {
+  const id = contacts[between({ min: 0, max: contacts.length - 1 })].id;
+  console.log('[Removed Contact]:', id);
+  contactsService.deleteContact(id);
+}, 1000 * 5);
+
+setTimeout(() => {
+  const id = contacts[between({ min: 0, max: contacts.length - 1 })].id;
+  console.log('[Modified Contact]:', id);
+  contactsService.updateContact(id, {
+    state: 'new state',
+    detail: 'laksjd asjld laksjd alsjkd adjlaskdj',
+  });
+}, 1000 * 7);
+
+setTimeout(() => {
   contactsService.addContact();
   contactsService.addContact();
   contactsService.addContact();

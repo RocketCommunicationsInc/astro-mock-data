@@ -57,6 +57,7 @@ export const generateContact = (
 
   return {
     id: contactId,
+    type: 'contact',
     status: shuffle<Status>(dataOption.statuses),
     name: faker.number.int(),
     ground: shuffle(dataOption.grounds),
@@ -76,6 +77,7 @@ export const generateContact = (
     elevation: faker.number.float({ max: 90 }),
     resolution: shuffle(dataOption.resolutions),
     resolutionStatus: shuffle(dataOption.resolutionStatuses),
+    selected: false,
     alerts: range(alertsRange).map(() => {
       return generateAlert({ end, equipment, contactRefId: contactId, start });
     }),
