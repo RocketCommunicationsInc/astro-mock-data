@@ -105,7 +105,7 @@ setTimeout(() => {
 
 setTimeout(() => {
   const { dataArray, dataById, dataIds } =
-    ttcGrmService.transformContactsData(ttcGrmcontacts);
+    ttcGrmService.transformData(ttcGrmcontacts);
 
   const x = dataArray[4];
   ttcGrmService.addContact();
