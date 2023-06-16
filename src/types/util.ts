@@ -51,5 +51,5 @@ export type Store = {
 export type StructuredData<T> = {
   dataArray: T[];
   dataById: { [key: string]: T };
-  dataIds: T[];
+  dataIds: string[];
 };
