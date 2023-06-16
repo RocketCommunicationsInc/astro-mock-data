@@ -13,7 +13,7 @@ export const TTC_GRM_Context = createContext(
   new TTC_GRM_Service({ initial: 0, limit: 0 }),
 );
 
-export const useActions = () => useContext(TTC_GRM_Context);
+export const useTTCGRMActions = () => useContext(TTC_GRM_Context);
 
 export type TTCGRMProviderProps = {
   children: ReactNode;
@@ -31,7 +31,7 @@ export const TTCGRMProvider = ({ children, options }: TTCGRMProviderProps) => {
 };
 
 export const useTTCGRMAlerts = () => {
-  const { subscribe, getSnapshot, transformData } = useActions();
+  const { subscribe, getSnapshot, transformData } = useTTCGRMActions();
   const selectedData = useSyncExternalStore(
     subscribe,
     () => getSnapshot().alerts,
@@ -42,7 +42,7 @@ export const useTTCGRMAlerts = () => {
 };
 
 export const useTTCGRMContacts = () => {
-  const { subscribe, getSnapshot, transformData } = useActions();
+  const { subscribe, getSnapshot, transformData } = useTTCGRMActions();
   const selectedData = useSyncExternalStore(
     subscribe,
     () => getSnapshot().contacts,
@@ -53,7 +53,7 @@ export const useTTCGRMContacts = () => {
 };
 
 export const useTTCGRMMnemonics = () => {
-  const { subscribe, getSnapshot, transformData } = useActions();
+  const { subscribe, getSnapshot, transformData } = useTTCGRMActions();
   const selectedData = useSyncExternalStore(
     subscribe,
     () => getSnapshot().mnemonics,
