@@ -9,11 +9,11 @@ import {
 import type { ContactsServiceOptions } from '../types';
 import { TTC_GRM_Service } from '../services/ttc-grm-service';
 
-export const TTC_GRM_Context = createContext(
+const TTCGRMContext = createContext(
   new TTC_GRM_Service({ initial: 0, limit: 0 }),
 );
 
-export const useTTCGRMActions = () => useContext(TTC_GRM_Context);
+export const useTTCGRMActions = () => useContext(TTCGRMContext);
 
 export type TTCGRMProviderProps = {
   children: ReactNode;
@@ -24,9 +24,9 @@ export const TTCGRMProvider = ({ children, options }: TTCGRMProviderProps) => {
   const contactsService = useRef(new TTC_GRM_Service(options));
 
   return (
-    <TTC_GRM_Context.Provider value={contactsService.current}>
+    <TTCGRMContext.Provider value={contactsService.current}>
       {children}
-    </TTC_GRM_Context.Provider>
+    </TTCGRMContext.Provider>
   );
 };
 
