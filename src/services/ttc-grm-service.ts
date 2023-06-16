@@ -34,6 +34,7 @@ export class TTC_GRM_Service {
   private _limit: number;
 
   constructor(options?: ContactsServiceOptions) {
+    this.transformData = this.transformData.bind(this);
     this._contactOptions = {
       alertsPercentage: options?.alertsPercentage,
       dateRef: options?.dateRef,
@@ -55,6 +56,7 @@ export class TTC_GRM_Service {
     contactsArray.forEach((contact) =>
       this._data.contacts.set(contact.id, contact),
     );
+    this._publish();
   };
 
   private _publish = () => {
@@ -92,10 +94,15 @@ export class TTC_GRM_Service {
   public transformData(mappedData: ContactsMap): StructuredData<Contact>;
   public transformData(mappedData: AlertsMap): StructuredData<Alert>;
   public transformData(mappedData: MnemonicsMap): StructuredData<Mnemonic>;
-  public transformData(
-    mappedData: ContactsMap | AlertsMap | MnemonicsMap,
-  ): any {
+  public transformData(mappedData: ContactsMap | AlertsMap | MnemonicsMap) {
     const firstValue: Contact | Alert | Mnemonic = [...mappedData.values()][0];
+    if (!firstValue) {
+      return {
+        dataArray: [],
+        dataById: {},
+        dataIds: [],
+      };
+    }
     if (firstValue.type === 'contact') {
       return this._buildStructuredData<Contact>(mappedData);
     } else if (firstValue.type === 'alert') {
@@ -179,7 +186,7 @@ export class TTC_GRM_Service {
   public modifyMnemonic = (params: ModifyMnemonicParams): Mnemonic => {
     const currentContact = this._data.contacts.get(params.contactRefId);
     if (!currentContact)
-      throw `Contact with id ${params.contactRefId} does not exist`;
+      throw new Error(`Contact with id ${params.contactRefId} does not exist`);
 
     const currentMnemonic = currentContact?.mnemonics.find(
       (mnemonic) => mnemonic.id === params.id,
@@ -314,30 +321,48 @@ export class TTC_GRM_Service {
     return `Successfully deleted all mnemonics with ${property} of ${value}`;
   };
 
-  public allContactsHaveProp = (property: keyof Contact): boolean => {
+  public allContactsHaveProp = (
+    property: keyof Contact,
+    value: Contact[keyof Contact],
+  ): boolean => {
     const { dataArray } = this.transformData(this._data.contacts);
-    return dataArray.every((data) => data[property]);
+    return dataArray.every((data) => data[property] === value);
   };
-  public allAlertsHaveProp = (property: keyof Alert): boolean => {
+  public allAlertsHaveProp = (
+    property: keyof Alert,
+    value: Alert[keyof Alert],
+  ): boolean => {
     const { dataArray } = this.transformData(this._data.alerts);
-    return dataArray.every((data) => data[property]);
+    return dataArray.every((data) => data[property] === value);
   };
-  public allMnemonicsHaveProp = (property: keyof Mnemonic): boolean => {
+  public allMnemonicsHaveProp = (
+    property: keyof Mnemonic,
+    value: Mnemonic[keyof Mnemonic],
+  ): boolean => {
     const { dataArray } = this.transformData(this._data.mnemonics);
-    return dataArray.every((data) => data[property]);
+    return dataArray.every((data) => data[property] === value);
   };
 
-  public anyContactsHaveProp = (property: keyof Contact): boolean => {
+  public anyContactsHaveProp = (
+    property: keyof Contact,
+    value: Contact[keyof Contact],
+  ): boolean => {
     const { dataArray } = this.transformData(this._data.contacts);
-    return dataArray.some((data) => data[property]);
+    return dataArray.some((data) => data[property] === value);
   };
-  public anyAlertsHaveProp = (property: keyof Alert): boolean => {
+  public anyAlertsHaveProp = (
+    property: keyof Alert,
+    value: Alert[keyof Alert],
+  ): boolean => {
     const { dataArray } = this.transformData(this._data.alerts);
-    return dataArray.some((data) => data[property]);
+    return dataArray.some((data) => data[property] === value);
   };
-  public anyMnemonicsHaveProp = (property: keyof Mnemonic): boolean => {
+  public anyMnemonicsHaveProp = (
+    property: keyof Mnemonic,
+    value: Mnemonic[keyof Mnemonic],
+  ): boolean => {
     const { dataArray } = this.transformData(this._data.mnemonics);
-    return dataArray.some((data) => data[property]);
+    return dataArray.some((data) => data[property] === value);
   };
 
   private _buildStructuredData = <T>(
