@@ -30,6 +30,7 @@ export class TTC_GRM_Service {
   private _data: Store = initialStore;
   private _subscribers: Set<Function> = new Set();
   private _contactOptions: ContactOptions = {};
+  private _interval: number = 0;
   private _intervalId?: NodeJS.Timer = undefined;
   private _limit: number;
 
@@ -41,14 +42,12 @@ export class TTC_GRM_Service {
       daysRange: options?.daysRange,
       secondAlertPercentage: options?.secondAlertPercentage,
     };
-
+    this._interval = options?.interval || 0;
     this._limit = options?.limit || 200;
 
-    if (options?.initial) this._generateInitialData(options.initial);
-    // sets interval for adding contacts
-    this._intervalId = options?.interval
-      ? setInterval(this.addContact.bind(this), 1000 * options.interval)
-      : undefined;
+    if (options?.initial && this._data.contacts.size === 0) {
+      this._generateInitialData(options.initial);
+    }
   }
 
   private _generateInitialData = (initial: number) => {
@@ -77,12 +76,19 @@ export class TTC_GRM_Service {
     });
   };
   public subscribe = (callback: (data: Store) => void): Unsubscribe => {
+    // sets interval for adding contacts on first subscribe
+    if (this._subscribers.size === 0) {
+      this._intervalId = this._interval
+        ? setInterval(this.addContact.bind(this), 1000 * this._interval)
+        : undefined;
+    }
+
     this._subscribers.add(callback);
     this._publish();
 
     return () => {
       this._subscribers.delete(callback);
-      if (this._subscribers.size <= 1) {
+      if (this._subscribers.size < 1) {
         clearInterval(this._intervalId);
       }
     };
@@ -115,9 +121,8 @@ export class TTC_GRM_Service {
   public addContact = (
     options: ContactOptions = this._contactOptions,
   ): Contact | void => {
-    console.log('adding');
     if (this._data.contacts.size >= this._limit) {
-      console.warn('contact limit reached');
+      console.info('contact limit reached');
       clearInterval(this._intervalId);
       return;
     }
