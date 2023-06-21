@@ -1,5 +1,4 @@
 import {
-  useRef,
   createContext,
   ReactNode,
   useContext,
@@ -21,10 +20,10 @@ export type TTCGRMProviderProps = {
 };
 
 export const TTCGRMProvider = ({ children, options }: TTCGRMProviderProps) => {
-  const contactsService = useRef(new TTC_GRM_Service(options));
+  const contactsService = new TTC_GRM_Service(options);
 
   return (
-    <TTCGRMContext.Provider value={contactsService.current}>
+    <TTCGRMContext.Provider value={contactsService}>
       {children}
     </TTCGRMContext.Provider>
   );
