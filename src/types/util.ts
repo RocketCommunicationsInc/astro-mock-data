@@ -53,3 +53,9 @@ export type StructuredData<T> = {
   dataById: { [key: string]: T };
   dataIds: string[];
 };
+
+export type Priority = 'Low' | 'Medium' | 'High';
+
+export type Mode = 'Full Automation' | 'Semi-Automation' | 'Manual';
+
+export type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>;

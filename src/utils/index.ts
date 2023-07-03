@@ -49,3 +49,12 @@ export const randomMinutes = (min: number, max: number) => {
 export const randomSeconds = (min: number, max: number) => {
   return 1000 * between({ min, max });
 };
+
+export const getDayOfYear = (date: Date) => {
+  const now = new Date(date);
+  const start = Number(new Date(now.getFullYear(), 0, 0));
+  const diff = Number(now) - start;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const day = Math.floor(diff / oneDay);
+  return day;
+};

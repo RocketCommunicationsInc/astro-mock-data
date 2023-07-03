@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 
 import dataOption from '../../data/options';
 import percentages from '../../data/percentages';
-import { Contact, ContactOptions, Status } from '../../types';
+import { Contact, ContactOptions, Status, Priority, Mode } from '../../types';
 import { generateAlert } from '../alerts/generate-alert';
 import { generateMnemonics } from '../mnemonics/generate-mnemonics';
 import {
@@ -14,6 +14,7 @@ import {
   setModulus,
   setSecondModulus,
   shuffle,
+  getDayOfYear,
 } from '../../utils';
 
 export const generateContact = (
@@ -58,6 +59,7 @@ export const generateContact = (
   return {
     id: contactId,
     type: 'contact',
+    priority: shuffle<Priority>(dataOption.priorities),
     status: shuffle<Status>(dataOption.statuses),
     name: faker.number.int(),
     ground: shuffle(dataOption.grounds),
@@ -71,10 +73,12 @@ export const generateContact = (
     endTimestamp,
     aos,
     los,
+    dayOfYear: getDayOfYear(new Date(beginTimestamp)),
     latitude: faker.location.latitude(),
     longitude: faker.location.longitude(),
     azimuth: faker.location.longitude(),
     elevation: faker.number.float({ max: 90 }),
+    mode: shuffle<Mode>(dataOption.modes),
     resolution: shuffle(dataOption.resolutions),
     resolutionStatus: shuffle(dataOption.resolutionStatuses),
     selected: false,
