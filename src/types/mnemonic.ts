@@ -1,4 +1,4 @@
-import { Status, DataType } from './util';
+import { Status, DataType, AtLeast } from './util';
 
 export type MnemonicsMap = Map<string, Mnemonic>;
 
@@ -25,16 +25,4 @@ export type Mnemonic = {
   contactRefId: string;
 };
 
-export type ModifyMnemonicParams = {
-  id: string;
-  mnemonicId?: string;
-  status?: Status;
-  unit?: string;
-  thresholdMax?: number;
-  thresholdMin?: number;
-  currentValue?: number;
-  subsystem?: string;
-  childSubSystem?: string;
-  measurement?: string;
-  contactRefId: string;
-};
+export type ModifyMnemonicParams = AtLeast<Mnemonic, 'id' | 'contactRefId'>;

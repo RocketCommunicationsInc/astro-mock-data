@@ -1,4 +1,4 @@
-import { Status, Category } from '../types';
+import { Status, Category, Priority, Mode } from '../types';
 
 // TODO: create types for all data options and add to readme schema
 type DataOptions = {
@@ -14,6 +14,8 @@ type DataOptions = {
   subsystems: string[];
   childSubSystems: string[];
   units: string[];
+  priorities: Priority[];
+  modes: Mode[];
 };
 
 const options: DataOptions = {
@@ -45,7 +47,7 @@ const options: DataOptions = {
   grounds: ['CTS', 'DGS', 'GTS', 'TCS', 'VTS', 'NHS', 'TTS', 'HTS'],
   resolutions: ['complete', 'failed', 'pass', 'prepass', 'scheduled'],
   resolutionStatuses: ['normal', 'critical', 'off', 'standby'],
-  states: ['executing', 'failed', 'ready', 'updating'],
+  states: ['upcoming', 'executing', 'complete', 'failed'],
   statuses: ['caution', 'critical', 'normal', 'off', 'serious', 'standby'],
   steps: [
     'AOS',
@@ -67,6 +69,8 @@ const options: DataOptions = {
     'Sun Sensors',
   ],
   units: ['Volts', 'Deg'],
+  priorities: ['Low', 'Medium', 'High'],
+  modes: ['Full Automation', 'Semi-Automation', 'Manual'],
 };
 
 export default options;
