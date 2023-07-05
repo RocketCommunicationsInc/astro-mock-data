@@ -54,25 +54,6 @@ export type Contact = {
 
 export type ModifyContactParams = AtLeast<Contact, 'id'>;
 
-// export type ModifyContactParams = {
-//   id: string;
-//   ground?: string;
-//   satellite?: string;
-//   equipment?: string;
-//   state?: string;
-//   step?: string;
-//   detail?: string;
-//   beginTimestamp?: number;
-//   endTimestamp?: number;
-//   resolution?: string;
-//   resolutionStatus?: string;
-//   selected?: boolean;
-//   alerts?: Alert[];
-//   mnemonics?: Mnemonic[];
-//   priority?: Priority;
-//   mode?: Mode;
-// };
-
 export type UpdateContactParams = {
   ground?: string;
   satellite?: string;

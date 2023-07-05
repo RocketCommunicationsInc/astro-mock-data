@@ -26,17 +26,3 @@ export type Alert = {
 };
 
 export type ModifyAlertParams = AtLeast<Alert, 'id' | 'contactRefId'>;
-
-// export type ModifyAlertParams = {
-//   id: string;
-//   status?: Status;
-//   category?: Category;
-//   message?: string;
-//   longMessage?: string;
-//   timestamp?: number;
-//   selected?: boolean;
-//   new?: boolean;
-//   expanded?: boolean;
-//   acknowledged?: boolean;
-//   contactRefId: string;
-// };

@@ -26,17 +26,3 @@ export type Mnemonic = {
 };
 
 export type ModifyMnemonicParams = AtLeast<Mnemonic, 'id' | 'contactRefId'>;
-
-// export type ModifyMnemonicParams = {
-//   id: string;
-//   mnemonicId?: string;
-//   status?: Status;
-//   unit?: string;
-//   thresholdMax?: number;
-//   thresholdMin?: number;
-//   currentValue?: number;
-//   subsystem?: string;
-//   childSubSystem?: string;
-//   measurement?: string;
-//   contactRefId: string;
-// };
