@@ -1,6 +1,6 @@
 {
   "name": "@astrouxds/mock-data",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Mock data for use with Astro UXDS demo apps.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
