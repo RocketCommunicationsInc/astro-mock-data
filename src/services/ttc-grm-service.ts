@@ -59,9 +59,11 @@ export class TTC_GRM_Service {
   };
 
   private _publish = () => {
-    const allContacts = Array.from(this._data.contacts.values());
     const newAlerts = new Map();
     const newMnemonics = new Map();
+
+    const allContacts = Array.from(this._data.contacts.values());
+
     const alertsArray = allContacts.flatMap((contact) => contact.alerts);
     alertsArray.forEach((alert) => newAlerts.set(alert.id, alert));
     const mnemonicsArray = allContacts.flatMap((contact) => contact.mnemonics);
@@ -69,6 +71,7 @@ export class TTC_GRM_Service {
       newMnemonics.set(mnemonic.id, mnemonic),
     );
 
+    this._data.contacts = structuredClone(this._data.contacts);
     this._data.alerts = newAlerts;
     this._data.mnemonics = newMnemonics;
     this._subscribers.forEach((callback) => {
