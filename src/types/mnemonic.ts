@@ -8,9 +8,9 @@ export type MnemonicOptions = {
   thresholdMax?: number;
   deviation?: number;
   precision?: number;
-  subsystem: string;
-  childSubsystem: string;
-  assemblyDevice: string;
+  subsystem?: string;
+  childSubsystem?: string;
+  assemblyDevice?: string;
 };
 
 export type Mnemonic = {
