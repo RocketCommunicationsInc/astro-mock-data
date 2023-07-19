@@ -13,6 +13,7 @@ type DataOptions = {
   steps: string[];
   subsystems: string[];
   childSubSystems: string[];
+  assemblyDevices: string[];
   units: string[];
   priorities: Priority[];
   modes: Mode[];
@@ -67,6 +68,14 @@ const options: DataOptions = {
     'Earth Sensors',
     'Reaction Wheels',
     'Sun Sensors',
+  ],
+  assemblyDevices: [
+    'Lens',
+    'Baffle',
+    'Detection Module',
+    'Detector',
+    'Thermo-Electric Cooler',
+    'Electronics',
   ],
   units: ['Volts', 'Deg'],
   priorities: ['Low', 'Medium', 'High'],

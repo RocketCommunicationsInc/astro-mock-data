@@ -2,7 +2,12 @@ import { faker } from '@faker-js/faker';
 
 import dataOption from '../data/options';
 import percentages from '../data/percentages';
-import { AlertsPercentage, BetweenOptions, RangeOptions } from '../types/util';
+import {
+  AlertsPercentage,
+  BetweenOptions,
+  RangeOptions,
+  Status,
+} from '../types/util';
 
 export const range = (options: RangeOptions): number[] => {
   if (typeof options === 'number') {
@@ -56,4 +61,23 @@ export const getDayOfYear = (date: Date) => {
   const oneDay = 1000 * 60 * 60 * 24;
   const day = Math.floor(diff / oneDay);
   return day;
+};
+
+export const getMostSevereStatus = (dataArray: any): Status => {
+  if (dataArray.some((entity: any) => entity.status === 'critical')) {
+    return 'critical';
+  }
+  if (dataArray.some((entity: any) => entity.status === 'serious')) {
+    return 'serious';
+  }
+  if (dataArray.some((entity: any) => entity.status === 'caution')) {
+    return 'caution';
+  }
+  if (dataArray.some((entity: any) => entity.status === 'normal')) {
+    return 'normal';
+  }
+  if (dataArray.some((entity: any) => entity.status === 'standby')) {
+    return 'standby';
+  }
+  return 'off';
 };

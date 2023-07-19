@@ -2,9 +2,17 @@ import { faker } from '@faker-js/faker';
 
 import dataOption from '../../data/options';
 import percentages from '../../data/percentages';
-import { Contact, ContactOptions, Status, Priority, Mode } from '../../types';
+import {
+  Contact,
+  ContactOptions,
+  Status,
+  Priority,
+  Mode,
+  Mnemonic,
+} from '../../types';
 import { generateAlert } from '../alerts/generate-alert';
 import { generateMnemonics } from '../mnemonics/generate-mnemonics';
+import { generateSubsystems } from '../equipment/generate-subsystems';
 import {
   between,
   generateEquipment,
@@ -55,6 +63,20 @@ export const generateContact = (
   const los = endTimestamp - randomSeconds(60, 300);
 
   const equipment = generateEquipment();
+  const subsystems = generateSubsystems(contactId);
+
+  const getSubSystemMneumonics = (): Mnemonic[] => {
+    const subsystemsMnemonics: Mnemonic[] = [];
+
+    subsystems.forEach((subsystem) => {
+      subsystem.childSubsystems.forEach((childSubsystem) => {
+        childSubsystem.assemblyDevices.forEach((assemblyDevices) => {
+          subsystemsMnemonics.push(...assemblyDevices.mnemonics);
+        });
+      });
+    });
+    return subsystemsMnemonics;
+  };
 
   return {
     id: contactId,
@@ -66,6 +88,7 @@ export const generateContact = (
     rev: faker.number.int({ min: 1001, max: 9999 }),
     satellite: 'USA-' + faker.string.alphanumeric(5).toUpperCase(),
     equipment,
+    subsystems,
     state: shuffle(dataOption.states),
     step: shuffle(dataOption.steps),
     detail: faker.lorem.sentence(between({ min: 8, max: 20 })),
@@ -85,6 +108,6 @@ export const generateContact = (
     alerts: range(alertsRange).map(() => {
       return generateAlert({ end, equipment, contactRefId: contactId, start });
     }),
-    mnemonics: generateMnemonics(9, { contactRefId: contactId }),
+    mnemonics: getSubSystemMneumonics(),
   };
 };

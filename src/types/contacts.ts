@@ -1,5 +1,6 @@
 import { Alert } from './alert';
 import { Mnemonic } from './mnemonic';
+import { Subsystem } from './equipment';
 import {
   AlertsPercentage,
   Status,
@@ -32,6 +33,7 @@ export type Contact = {
   rev: number;
   satellite: string;
   equipment: string;
+  subsystems: Subsystem[];
   state: string;
   step: string;
   detail: string;
