@@ -5,11 +5,12 @@ import { generateChildSubsystems } from './generate-child-subsystems';
 import { getMostSevereStatus } from '../../utils';
 
 export const generateSubsystem = (contactRefId: string): Subsystem => {
-  const childSubsystems = generateChildSubsystems(contactRefId);
+  const name = shuffle(dataOption.subsystems);
+  const childSubsystems = generateChildSubsystems(contactRefId, name);
   const status = getMostSevereStatus(childSubsystems);
 
   return {
-    name: shuffle(dataOption.subsystems),
+    name,
     status: status,
     childSubsystems: childSubsystems,
   };

@@ -9,11 +9,13 @@ export type Subsystem = {
 export type ChildSubsystem = {
   name: string;
   status: Status;
+  subsystemParent: string;
   assemblyDevices: AssemblyDevice[];
 };
 
 export type AssemblyDevice = {
   name: string;
   status: Status;
+  childSubsystemParent: string;
   mnemonics: Mnemonic[];
 };

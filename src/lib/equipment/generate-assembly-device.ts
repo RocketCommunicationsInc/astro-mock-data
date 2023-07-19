@@ -6,13 +6,22 @@ import { getMostSevereStatus } from '../../utils';
 
 export const generateAssemblyDevice = (
   contactRefId: string,
+  subsystem: string,
+  childSubsystem: string,
 ): AssemblyDevice => {
-  const mnemonics = generateMnemonics(3, { contactRefId });
+  const name = shuffle(dataOption.assemblyDevices);
+  const mnemonics = generateMnemonics(1, {
+    contactRefId,
+    subsystem,
+    childSubsystem,
+    assemblyDevice: name,
+  });
   const status = getMostSevereStatus(mnemonics);
 
   return {
-    name: shuffle(dataOption.assemblyDevices),
+    name,
     status: status,
+    childSubsystemParent: childSubsystem,
     mnemonics: mnemonics,
   };
 };

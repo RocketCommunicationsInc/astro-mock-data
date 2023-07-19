@@ -4,10 +4,12 @@ import { generateAssemblyDevice } from './generate-assembly-device';
 
 export const generateAssemblyDevices = (
   contactRefId: string,
+  subsystem: string,
+  childSubsystem: string,
 ): AssemblyDevice[] => {
   const assemblyDeviceArray = Array.from(
     { length: dataOption.assemblyDevices.length },
-    () => generateAssemblyDevice(contactRefId),
+    () => generateAssemblyDevice(contactRefId, subsystem, childSubsystem),
   );
 
   return assemblyDeviceArray.filter(

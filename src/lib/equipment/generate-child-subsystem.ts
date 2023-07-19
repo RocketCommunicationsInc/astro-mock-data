@@ -5,13 +5,20 @@ import { generateAssemblyDevices } from './generate-assembly-devices';
 
 export const generateChildSubsystem = (
   contactRefId: string,
+  subsystem: string,
 ): ChildSubsystem => {
-  const assemblyDevices = generateAssemblyDevices(contactRefId);
+  const name = shuffle(dataOption.childSubSystems);
+  const assemblyDevices = generateAssemblyDevices(
+    contactRefId,
+    subsystem,
+    name,
+  );
   const status = getMostSevereStatus(assemblyDevices);
 
   return {
-    name: shuffle(dataOption.childSubSystems),
+    name,
     status: status,
+    subsystemParent: subsystem,
     assemblyDevices: assemblyDevices,
   };
 };
