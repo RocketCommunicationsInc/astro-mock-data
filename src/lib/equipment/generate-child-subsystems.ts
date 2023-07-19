@@ -1,4 +1,4 @@
-import { ChildSubsystem } from '../../types/equipment';
+import { ChildSubsystem } from '../../types/subsystems';
 import dataOption from '../../data/options';
 import { generateChildSubsystem } from './generate-child-subsystem';
 

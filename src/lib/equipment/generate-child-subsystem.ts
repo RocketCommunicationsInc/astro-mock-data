@@ -1,4 +1,4 @@
-import { ChildSubsystem } from '../../types/equipment';
+import { ChildSubsystem } from '../../types/subsystems';
 import dataOption from '../../data/options';
 import { shuffle, getMostSevereStatus } from '../../utils';
 import { generateAssemblyDevices } from './generate-assembly-devices';

@@ -1,4 +1,4 @@
-import { Subsystem } from '../../types/equipment';
+import { Subsystem } from '../../types/subsystems';
 import dataOption from '../../data/options';
 import { shuffle } from '../../utils';
 import { generateChildSubsystems } from './generate-child-subsystems';

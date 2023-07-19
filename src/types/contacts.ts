@@ -1,6 +1,6 @@
 import { Alert } from './alert';
 import { Mnemonic } from './mnemonic';
-import { Subsystem } from './equipment';
+import { Subsystem } from './subsystems';
 import {
   AlertsPercentage,
   Status,
