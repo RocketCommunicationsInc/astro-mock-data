@@ -7,7 +7,7 @@ import { getMostSevereStatus } from '../../utils';
 export const generateAssemblyDevice = (
   contactRefId: string,
 ): AssemblyDevice => {
-  const mnemonics = generateMnemonics(20, { contactRefId });
+  const mnemonics = generateMnemonics(3, { contactRefId });
   const status = getMostSevereStatus(mnemonics);
 
   return {
