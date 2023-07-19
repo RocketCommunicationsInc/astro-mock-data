@@ -11,8 +11,7 @@ import {
   Mnemonic,
 } from '../../types';
 import { generateAlert } from '../alerts/generate-alert';
-import { generateMnemonics } from '../mnemonics/generate-mnemonics';
-import { generateSubsystems } from '../equipment/generate-subsystems';
+import { generateSubsystems } from '../subsystems/generate-subsystems';
 import {
   between,
   generateEquipment,
