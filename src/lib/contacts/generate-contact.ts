@@ -66,7 +66,7 @@ export const generateContact = (
     ? generateSubsystems(contactId, options.desiredSubsystems)
     : generateSubsystems(contactId);
 
-  const getSubSystemMneumonics = (): Mnemonic[] => {
+  const getSubSystemMnemonics = (): Mnemonic[] => {
     const subsystemsMnemonics: Mnemonic[] = [];
 
     subsystems.forEach((subsystem) => {
@@ -109,6 +109,6 @@ export const generateContact = (
     alerts: range(alertsRange).map(() => {
       return generateAlert({ end, equipment, contactRefId: contactId, start });
     }),
-    mnemonics: getSubSystemMneumonics(),
+    mnemonics: getSubSystemMnemonics(),
   };
 };

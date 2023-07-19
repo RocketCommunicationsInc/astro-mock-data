@@ -37,5 +37,6 @@ export const generateMnemonic = (options: MnemonicOptions): Mnemonic => {
     assemblyDevice,
     measurement,
     contactRefId: options?.contactRefId || '',
+    watched: false,
   };
 };

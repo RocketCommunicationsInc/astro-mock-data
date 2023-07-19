@@ -27,6 +27,7 @@ export type Mnemonic = {
   assemblyDevice: string;
   measurement: string;
   contactRefId: string;
+  watched: boolean;
 };
 
 export type ModifyMnemonicParams = AtLeast<Mnemonic, 'id' | 'contactRefId'>;
