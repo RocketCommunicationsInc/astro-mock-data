@@ -62,7 +62,9 @@ export const generateContact = (
   const los = endTimestamp - randomSeconds(60, 300);
 
   const equipment = generateEquipment();
-  const subsystems = generateSubsystems(contactId);
+  const subsystems = options?.desiredSubsystems
+    ? generateSubsystems(contactId, options.desiredSubsystems)
+    : generateSubsystems(contactId);
 
   const getSubSystemMneumonics = (): Mnemonic[] => {
     const subsystemsMnemonics: Mnemonic[] = [];

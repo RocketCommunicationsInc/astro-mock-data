@@ -18,6 +18,7 @@ export type ContactOptions = {
   secondAlertPercentage?: AlertsPercentage;
   daysRange?: number;
   dateRef?: string | number | Date;
+  desiredSubsystems?: string[];
 };
 
 export type ContactsServiceOptions = ContactOptions & SubscribeOptions;
