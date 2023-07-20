@@ -59,3 +59,15 @@ export type Priority = 'Low' | 'Medium' | 'High';
 export type Mode = 'Full Automation' | 'Semi-Automation' | 'Manual';
 
 export type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>;
+
+export type GroundStations =
+  | 'CTS'
+  | 'DGS'
+  | 'GTS'
+  | 'TCS'
+  | 'VTS'
+  | 'NHS'
+  | 'TTS'
+  | 'HTS';
+
+export type States = 'upcoming' | 'executing' | 'complete' | 'failed';

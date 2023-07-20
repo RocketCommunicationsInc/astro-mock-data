@@ -13,6 +13,7 @@ type DataOptions = {
   steps: string[];
   subsystems: string[];
   childSubSystems: string[];
+  assemblyDevices: string[];
   units: string[];
   priorities: Priority[];
   modes: Mode[];
@@ -61,12 +62,36 @@ const options: DataOptions = {
     'SARM',
     'Uplink',
   ],
-  subsystems: ['Attitude', 'Payload', 'Power', 'Propulsion', 'Thermal'],
+  subsystems: [
+    'Attitude',
+    'Payload',
+    'Power',
+    'Propulsion',
+    'Thermal',
+    'Electrical',
+    'Structure',
+  ],
   childSubSystems: [
     'Star Tracker',
     'Earth Sensors',
     'Reaction Wheels',
     'Sun Sensors',
+    'Transponders',
+    'Antenna Control',
+    'Telemetry',
+    'Battery',
+  ],
+  assemblyDevices: [
+    'Lens',
+    'Baffle',
+    'Detection Module',
+    'Detector',
+    'Thermo-Electric Cooler',
+    'Electronics',
+    'Local Oscillator',
+    'Frequency Converter',
+    'Transmitter',
+    'Receiver',
   ],
   units: ['Volts', 'Deg'],
   priorities: ['Low', 'Medium', 'High'],

@@ -149,7 +149,7 @@ export class TTC_GRM_Service {
   };
   public addMnemonic = (
     contactId: string,
-    options?: MnemonicOptions,
+    options: MnemonicOptions,
   ): Mnemonic => {
     const newMnemonic = generateMnemonic({
       contactRefId: contactId,

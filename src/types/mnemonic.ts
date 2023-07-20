@@ -8,6 +8,9 @@ export type MnemonicOptions = {
   thresholdMax?: number;
   deviation?: number;
   precision?: number;
+  subsystem?: string;
+  childSubsystem?: string;
+  assemblyDevice?: string;
 };
 
 export type Mnemonic = {
@@ -20,9 +23,11 @@ export type Mnemonic = {
   thresholdMin: number;
   currentValue: number;
   subsystem: string;
-  childSubSystem: string;
+  childSubsystem: string;
+  assemblyDevice: string;
   measurement: string;
   contactRefId: string;
+  watched: boolean;
 };
 
 export type ModifyMnemonicParams = AtLeast<Mnemonic, 'id' | 'contactRefId'>;
