@@ -204,14 +204,8 @@ export class TTC_GRM_Service {
 
     const mnemonicIndex = currentContact?.mnemonics.indexOf(currentMnemonic);
     const modifiedMnemonic = { ...currentMnemonic, ...params };
-    const modifiedMnemonics = currentContact.mnemonics.splice(
-      mnemonicIndex,
-      1,
-      modifiedMnemonic,
-    );
-
-    this.modifyContact({ id: currentContact.id, mnemonics: modifiedMnemonics });
-
+    currentContact.mnemonics.splice(mnemonicIndex, 1, modifiedMnemonic);
+    this._publish();
     return modifiedMnemonic;
   };
 
