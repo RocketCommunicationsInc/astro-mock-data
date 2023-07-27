@@ -10,6 +10,7 @@ import {
   Mode,
   AtLeast,
 } from './util';
+import type { SubsystemOptions } from './subsystems';
 
 export type ContactsMap = Map<string, Contact>;
 
@@ -18,7 +19,7 @@ export type ContactOptions = {
   secondAlertPercentage?: AlertsPercentage;
   daysRange?: number;
   dateRef?: string | number | Date;
-  desiredSubsystems?: string[];
+  subsystemOptions?: SubsystemOptions;
 };
 
 export type ContactsServiceOptions = ContactOptions & SubscribeOptions;
