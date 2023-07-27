@@ -22,5 +22,5 @@ export type AssemblyDevice = {
 
 export type SubsystemOptions = {
   desiredSubsystems?: string[];
-  mnemonicsPerAssemblyDevice: number;
+  mnemonicsPerAssemblyDevice?: number;
 };
