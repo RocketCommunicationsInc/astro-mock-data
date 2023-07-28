@@ -81,3 +81,26 @@ export const getMostSevereStatus = (dataArray: any): Status => {
   }
   return 'off';
 };
+
+export const evaluateStatus = (
+  currentValue: number,
+  minThreshold: number,
+  maxThreshold: number,
+): Status => {
+  if (currentValue >= maxThreshold || currentValue <= minThreshold)
+    return 'critical';
+
+  const acceptableRange = maxThreshold - minThreshold;
+
+  const differenceToMax = maxThreshold - currentValue;
+  const maxWithinPercentage = (differenceToMax / acceptableRange) * 100;
+
+  const differenceToMin = currentValue - minThreshold;
+  const minWithinPercentage = (differenceToMin / acceptableRange) * 100;
+
+  if (maxWithinPercentage <= 10 || minWithinPercentage <= 10) return 'serious';
+
+  if (maxWithinPercentage <= 20 || minWithinPercentage <= 20) return 'caution';
+
+  return 'normal';
+};

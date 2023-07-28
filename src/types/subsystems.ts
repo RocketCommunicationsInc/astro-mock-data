@@ -19,3 +19,8 @@ export type AssemblyDevice = {
   childSubsystemParent: string;
   mnemonics: Mnemonic[];
 };
+
+export type SubsystemOptions = {
+  desiredSubsystems?: string[];
+  mnemonicsPerAssemblyDevice?: number;
+};

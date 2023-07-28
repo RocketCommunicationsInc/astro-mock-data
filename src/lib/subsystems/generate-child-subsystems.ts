@@ -1,14 +1,16 @@
 import { ChildSubsystem } from '../../types/subsystems';
 import dataOption from '../../data/options';
 import { generateChildSubsystem } from './generate-child-subsystem';
+import type { SubsystemOptions } from '../../types/index';
 
 export const generateChildSubsystems = (
   contactRefId: string,
-  subsystem: string,
+  subsystemName: string,
+  subsystemOptions?: SubsystemOptions,
 ): ChildSubsystem[] => {
   const childSubsystemArray = Array.from(
     { length: dataOption.childSubSystems.length },
-    () => generateChildSubsystem(contactRefId, subsystem),
+    () => generateChildSubsystem(contactRefId, subsystemName, subsystemOptions),
   );
 
   return childSubsystemArray.filter(

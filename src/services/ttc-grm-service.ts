@@ -30,7 +30,7 @@ export class TTC_GRM_Service {
   private _data: Store = initialStore;
   private _subscribers: Set<Function> = new Set();
   private _contactOptions: ContactOptions = {};
-  private _interval: number = 0;
+  private _interval: number;
   private _intervalId?: NodeJS.Timer = undefined;
   private _limit: number;
 
@@ -41,6 +41,7 @@ export class TTC_GRM_Service {
       dateRef: options?.dateRef,
       daysRange: options?.daysRange,
       secondAlertPercentage: options?.secondAlertPercentage,
+      subsystemOptions: options?.subsystemOptions,
     };
     this._interval = options?.interval || 0;
     this._limit = options?.limit || 200;
