@@ -22,6 +22,7 @@ import {
   setSecondModulus,
   shuffle,
   getDayOfYear,
+  getSubsystemMnemonics,
 } from '../../utils';
 
 export const generateContact = (
@@ -64,19 +65,6 @@ export const generateContact = (
   const equipment = generateEquipment();
   const subsystems = generateSubsystems(contactId, options?.subsystemOptions);
 
-  const getSubSystemMnemonics = (): Mnemonic[] => {
-    const subsystemsMnemonics: Mnemonic[] = [];
-
-    subsystems.forEach((subsystem) => {
-      subsystem.childSubsystems.forEach((childSubsystem) => {
-        childSubsystem.assemblyDevices.forEach((assemblyDevices) => {
-          subsystemsMnemonics.push(...assemblyDevices.mnemonics);
-        });
-      });
-    });
-    return subsystemsMnemonics;
-  };
-
   return {
     id: contactId,
     type: 'contact',
@@ -107,6 +95,6 @@ export const generateContact = (
     alerts: range(alertsRange).map(() => {
       return generateAlert({ end, equipment, contactRefId: contactId, start });
     }),
-    mnemonics: getSubSystemMnemonics(),
+    mnemonics: getSubsystemMnemonics(subsystems),
   };
 };

@@ -7,7 +7,12 @@ import {
   BetweenOptions,
   RangeOptions,
   Status,
-} from '../types/util';
+  Contact,
+  ModifyMnemonicParams,
+  Mnemonic,
+  Subsystem,
+} from '../types';
+import * as _ from 'lodash';
 
 export const range = (options: RangeOptions): number[] => {
   if (typeof options === 'number') {
@@ -103,4 +108,33 @@ export const evaluateStatus = (
   if (maxWithinPercentage <= 20 || minWithinPercentage <= 20) return 'caution';
 
   return 'normal';
+};
+
+export const getSubsystemMnemonics = (subsystems: Subsystem[]): Mnemonic[] => {
+  const subsystemsMnemonics: Mnemonic[] = [];
+
+  subsystems.forEach((subsystem) => {
+    subsystem.childSubsystems.forEach((childSubsystem) => {
+      childSubsystem.assemblyDevices.forEach((assemblyDevices) => {
+        subsystemsMnemonics.push(...assemblyDevices.mnemonics);
+      });
+    });
+  });
+  return subsystemsMnemonics;
+};
+
+export const updateSubsystemWithMnemonic = (
+  currentContact: Contact,
+  params: ModifyMnemonicParams,
+) => {
+  const updateMnemonicOnSubsystem = (value: any) => {
+    if (value.id === params.id) {
+      return { ...value, ...params };
+    }
+  };
+  const modifiedSubsystems = _.cloneDeepWith(
+    currentContact.subsystems,
+    updateMnemonicOnSubsystem,
+  );
+  return modifiedSubsystems;
 };
