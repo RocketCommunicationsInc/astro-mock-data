@@ -91,6 +91,8 @@ export const evaluateStatus = (
   currentValue: number,
   minThreshold: number,
   maxThreshold: number,
+  seriousThresholdPercentage: number = 10,
+  cautionThresholdPercentage: number = 20,
 ): Status => {
   if (currentValue >= maxThreshold || currentValue <= minThreshold)
     return 'critical';
@@ -103,9 +105,17 @@ export const evaluateStatus = (
   const differenceToMin = currentValue - minThreshold;
   const minWithinPercentage = (differenceToMin / acceptableRange) * 100;
 
-  if (maxWithinPercentage <= 10 || minWithinPercentage <= 10) return 'serious';
+  if (
+    maxWithinPercentage <= seriousThresholdPercentage ||
+    minWithinPercentage <= seriousThresholdPercentage
+  )
+    return 'serious';
 
-  if (maxWithinPercentage <= 20 || minWithinPercentage <= 20) return 'caution';
+  if (
+    maxWithinPercentage <= cautionThresholdPercentage ||
+    minWithinPercentage <= cautionThresholdPercentage
+  )
+    return 'caution';
 
   return 'normal';
 };
