@@ -20,6 +20,7 @@ import type {
   MnemonicOptions,
   StructuredData,
 } from '../types';
+import * as _ from 'lodash';
 
 const initialStore = {
   contacts: new Map(),
@@ -197,16 +198,34 @@ export class TTC_GRM_Service {
     if (!currentContact)
       throw new Error(`Contact with id ${params.contactRefId} does not exist`);
 
-    const currentMnemonic = currentContact?.mnemonics.find(
+    // Updates mnemonic on nested subsystem
+    const updateMnemonicOnSubsystem = (value: any) => {
+      if (value.id === params.id) {
+        return { ...value, ...params };
+      }
+    };
+    const modifiedSubsystems = _.cloneDeepWith(
+      currentContact.subsystems,
+      updateMnemonicOnSubsystem,
+    );
+    currentContact.subsystems = modifiedSubsystems;
+
+    // updates mnemonic on array of conact.mnemonics
+    const mnemonicOnContactIndex = currentContact?.mnemonics.findIndex(
       (mnemonic) => mnemonic.id === params.id,
     );
-    if (!currentMnemonic)
-      throw new Error(`Alert with id ${params.id} does not exist`);
+    const modifiedMnemonic = {
+      ...currentContact.mnemonics[mnemonicOnContactIndex],
+      ...params,
+    };
+    currentContact.mnemonics.splice(
+      mnemonicOnContactIndex,
+      1,
+      modifiedMnemonic,
+    );
 
-    const mnemonicIndex = currentContact?.mnemonics.indexOf(currentMnemonic);
-    const modifiedMnemonic = { ...currentMnemonic, ...params };
-    currentContact.mnemonics.splice(mnemonicIndex, 1, modifiedMnemonic);
     this._publish();
+
     return modifiedMnemonic;
   };
 
