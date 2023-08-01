@@ -20,6 +20,8 @@ import type {
   MnemonicOptions,
   StructuredData,
 } from '../types';
+import * as _ from 'lodash';
+import { updateSubsystemWithMnemonic, getSubsystemMnemonics } from '../utils';
 
 const initialStore = {
   contacts: new Map(),
@@ -53,7 +55,7 @@ export class TTC_GRM_Service {
 
   private _generateInitialData = (initial: number) => {
     const contactsArray = generateContacts(initial, this._contactOptions);
-    contactsArray.forEach((contact) =>
+    contactsArray.forEach((contact: Contact) =>
       this._data.contacts.set(contact.id, contact),
     );
     this._publish();
@@ -64,7 +66,6 @@ export class TTC_GRM_Service {
     const newMnemonics = new Map();
 
     const allContacts = Array.from(this._data.contacts.values());
-
     const alertsArray = allContacts.flatMap((contact) => contact.alerts);
     alertsArray.forEach((alert) => newAlerts.set(alert.id, alert));
     const mnemonicsArray = allContacts.flatMap((contact) => contact.mnemonics);
@@ -171,6 +172,10 @@ export class TTC_GRM_Service {
     if (!currentContact)
       throw new Error(`Contact with id ${params.id} does not exist`);
     const modifiedContact = { ...currentContact, ...params };
+    if (params.subsystems) {
+      modifiedContact.mnemonics = getSubsystemMnemonics(params.subsystems);
+    }
+
     this._data.contacts.set(params.id, modifiedContact);
     this._publish();
     return modifiedContact;
@@ -197,16 +202,24 @@ export class TTC_GRM_Service {
     if (!currentContact)
       throw new Error(`Contact with id ${params.contactRefId} does not exist`);
 
-    const currentMnemonic = currentContact?.mnemonics.find(
+    const mnemonicIndex = currentContact?.mnemonics.findIndex(
       (mnemonic) => mnemonic.id === params.id,
     );
-    if (!currentMnemonic)
-      throw new Error(`Alert with id ${params.id} does not exist`);
 
-    const mnemonicIndex = currentContact?.mnemonics.indexOf(currentMnemonic);
-    const modifiedMnemonic = { ...currentMnemonic, ...params };
-    currentContact.mnemonics.splice(mnemonicIndex, 1, modifiedMnemonic);
-    this._publish();
+    const modifiedMnemonic = {
+      ...currentContact.mnemonics[mnemonicIndex],
+      ...params,
+    };
+
+    const modifiedSubsystems = updateSubsystemWithMnemonic(
+      currentContact,
+      params,
+    );
+
+    this.modifyContact({
+      id: currentContact.id,
+      subsystems: modifiedSubsystems,
+    });
     return modifiedMnemonic;
   };
 
@@ -214,7 +227,11 @@ export class TTC_GRM_Service {
     params: Omit<ModifyContactParams, 'id'>,
   ): string => {
     this._data.contacts.forEach((contact: Contact, contactId: string) => {
-      this._data.contacts.set(contactId, { ...contact, ...params });
+      const modifiedContact = { ...contact, ...params };
+      if (params.subsystems) {
+        modifiedContact.mnemonics = getSubsystemMnemonics(params.subsystems);
+      }
+      this._data.contacts.set(contactId, modifiedContact);
     });
     this._publish();
     return `Successfully modified all contacts`;
@@ -235,15 +252,18 @@ export class TTC_GRM_Service {
     params: Omit<ModifyMnemonicParams, 'id' | 'contactRefId'>,
   ): string => {
     this._data.contacts.forEach((contact: Contact, contactId: string) => {
-      const mappedMnemonics = contact.mnemonics.map((mnemonic) => {
-        return { ...mnemonic, ...params };
-      });
-      this._data.contacts.set(contactId, {
-        ...contact,
-        mnemonics: mappedMnemonics,
-      });
+      const updateMnemonicOnSubsystem = (value: any) => {
+        if (value.type === 'mnemonic') {
+          return { ...value, ...params };
+        }
+      };
+
+      const modifiedSubsystems = _.cloneDeepWith(
+        contact.subsystems,
+        updateMnemonicOnSubsystem,
+      );
+      this.modifyContact({ ...contact, subsystems: modifiedSubsystems });
     });
-    this._publish();
     return `Successfully modified all mnemonics`;
   };
 

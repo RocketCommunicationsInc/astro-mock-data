@@ -23,7 +23,7 @@ export const generateMnemonic = (options: MnemonicOptions): Mnemonic => {
     min: min - deviation,
     precision,
   });
-  const status = evaluateStatus(currentValue, min, max);
+  const status = evaluateStatus(currentValue, min, max, 5, 10);
 
   return {
     id: faker.string.uuid(),
