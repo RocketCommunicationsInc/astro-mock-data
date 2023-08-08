@@ -1,4 +1,4 @@
-import { Status, Mnemonic } from './index';
+import { Status, Mnemonic, MnemonicOptions } from './index';
 
 export type Subsystem = {
   name: string;
@@ -20,7 +20,12 @@ export type AssemblyDevice = {
   mnemonics: Mnemonic[];
 };
 
+export type AssemblyDeviceOptions = {
+  mnemonicsPerAssemblyDevice?: number;
+};
+
 export type SubsystemOptions = {
   desiredSubsystems?: string[];
-  mnemonicsPerAssemblyDevice?: number;
+  assemblyDeviceOptions?: AssemblyDeviceOptions;
+  mnemonicOptions?: MnemonicOptions;
 };

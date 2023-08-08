@@ -2,14 +2,7 @@ import { faker } from '@faker-js/faker';
 
 import dataOption from '../../data/options';
 import percentages from '../../data/percentages';
-import {
-  Contact,
-  ContactOptions,
-  Status,
-  Priority,
-  Mode,
-  Mnemonic,
-} from '../../types';
+import { Contact, ContactOptions, Status, Priority, Mode } from '../../types';
 import { generateAlert } from '../alerts/generate-alert';
 import { generateSubsystems } from '../subsystems/generate-subsystems';
 import {

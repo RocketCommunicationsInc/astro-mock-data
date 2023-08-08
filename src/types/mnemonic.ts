@@ -11,6 +11,8 @@ export type MnemonicOptions = {
   subsystem?: string;
   childSubsystem?: string;
   assemblyDevice?: string;
+  seriousThresholdRange?: number;
+  cautionThresholdRange?: number;
 };
 
 export type Mnemonic = {

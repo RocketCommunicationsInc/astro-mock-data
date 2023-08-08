@@ -11,12 +11,14 @@ export const generateAssemblyDevice = (
   subsystemOptions?: SubsystemOptions,
 ): AssemblyDevice => {
   const name = shuffle(dataOption.assemblyDevices);
-  const numOfMnemonics = subsystemOptions?.mnemonicsPerAssemblyDevice || 1;
+  const numOfMnemonics =
+    subsystemOptions?.assemblyDeviceOptions?.mnemonicsPerAssemblyDevice || 1;
   const mnemonics = generateMnemonics(numOfMnemonics, {
     contactRefId,
     subsystem,
     childSubsystem,
     assemblyDevice: name,
+    ...subsystemOptions?.mnemonicOptions,
   });
   const status = getMostSevereStatus(mnemonics);
 
