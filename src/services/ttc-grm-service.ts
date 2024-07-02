@@ -33,7 +33,7 @@ export class TTC_GRM_Service {
   private _subscribers: Set<Function> = new Set();
   private _contactOptions: ContactOptions = {};
   private _interval: number;
-  private _intervalId?: NodeJS.Timer = undefined;
+  private _intervalId?: NodeJS.Timeout = undefined;
   private _limit: number;
 
   constructor(options?: ContactsServiceOptions) {

@@ -29,7 +29,7 @@ export const generateMnemonic = (options?: MnemonicOptions): Mnemonic => {
   const currentValue = faker.number.float({
     max: thresholdMax + deviation,
     min: thresholdMin - deviation,
-    precision,
+    multipleOf: precision,
   });
   const status = evaluateStatus(
     currentValue,
