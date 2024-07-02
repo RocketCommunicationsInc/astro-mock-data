@@ -23,15 +23,15 @@
     "url": "https://github.com/RocketCommunicationsInc/astro-mock-data/issues"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.196",
-    "@types/react": "^18.2.12",
-    "react": "^18.2.0",
+    "@types/lodash": "^4.17.6",
+    "@types/react": "^18.3.3",
+    "react": "^18.3.1",
     "rimraf": "^3.0.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.4.2"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.0.2",
+    "@faker-js/faker": "^8.4.1",
     "lodash": "^4.17.21"
   }
 }
